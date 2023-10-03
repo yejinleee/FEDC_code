@@ -1,0 +1,28 @@
+.toolbar {
+  width: 600px;
+  height: 40px;
+  background-color: #ffe4c4;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+.toolbar button {
+  height: 25px;
+  border: 1px solid #999187;
+  border-radius: 10px;
+  background-color: #fff2e3;
+  cursor: pointer;
+}
+.toolbar button:hover {
+  background-color: #e2c095;
+}
+
+.editor {
+  width: 600px;
+  height: 300px;
+  padding: 16px;
+  margin-top: 8px;
+  border: 1px solid black;
+  box-sizing: border-box;
+  outline: none; /* 영역을 선택해도 테두리 생기지 않도록 */
+}
