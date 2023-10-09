@@ -1,8 +1,13 @@
 // params.$target : 해당 컴포넌트가 추가될 DOM요소
 // params.initialState: 해당 컴포넌트 초기 상태
-export function TodoList({ $target, initialState }) {
-  const $todoList = document.createElement("div");
-  $target.appendChild($todoList);
+export function TodoList({
+  $target,
+  initialState,
+  handleComplete,
+  handleDelete,
+}) {
+  const $listWrap = document.createElement("div");
+  $target.appendChild($listWrap);
 
   this.state = initialState;
 
@@ -12,24 +17,41 @@ export function TodoList({ $target, initialState }) {
   };
 
   this.render = () => {
-    $todoList.replaceChildren(); //// 투두를 추가해서 새로 렌더링될때 이전값에 추가로 전부다 생기니까 한번 리셋하고 전체를 그린다
+    // $listWrap.replaceChildren(); //// 투두를 추가해서 새로 렌더링될때 이전값에 추가로 전부다 생기니까 한번 리셋하고 전체를 그린다
 
-    // 실행하면 현재 상태를 기준으로 컴포넌트를 렌더링하는 동작
-    this.state.map(({ text, isCompleted }) => {
-      // console.log(text);
-      new TodoEach({ $target: $todoList, text });
+    // // 실행하면 현재 상태를 기준으로 컴포넌트를 렌더링하는 동작
+    // this.state.map(({ text, isCompleted }) => {
+    //   // console.log(text);
+    //   new TodoEach({ $target: $listWrap, text });
 
-      /// 이거 그냥 $todoList 넘기며 안되고 $target: $todoList, 이렇게 키벨류 줘라.
+    //   /// 이거 그냥 $listWrap 넘기며 안되고 $target: $listWrap, 이렇게 키벨류 줘라.
+    // });
+    $listWrap.innerHTML = `
+    <ul>
+        ${this.state
+          .map(
+            ({ text, isCompleted, idx }) => `<li data-idx = ${idx} class=${
+              isCompleted ? "done" : ""
+            }>
+        ${text} </li><button data-idx = ${idx} >X</button>`
+          )
+          .join("")}
+    </ul>`;
+
+    $listWrap.querySelectorAll("li").forEach(($li) => {
+      $li.addEventListener("click", (e) => {
+        const idx = e.target.dataset.idx;
+        handleComplete(parseInt(idx));
+        this.render();
+      });
     });
-    // $todoList.innerHTML = `
-    // <ul>
-    //     ${this.state
-    //       .map(
-    //         ({ todo, isCompleted }) => `<li>
-    //     ${todo.text}</li>`
-    //       )
-    //       .join("")}
-    // </ul>`;
+    $listWrap.querySelectorAll("button").forEach(($btn) => {
+      $btn.addEventListener("click", (e) => {
+        const idx = e.target.dataset.idx;
+        handleDelete(parseInt(idx));
+        this.render();
+      });
+    });
   };
 
   this.render();
