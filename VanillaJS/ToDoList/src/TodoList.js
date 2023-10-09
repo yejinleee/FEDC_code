@@ -1,6 +1,6 @@
 // params.$target : 해당 컴포넌트가 추가될 DOM요소
 // params.initialState: 해당 컴포넌트 초기 상태
-function TodoList({ $target, initialState }) {
+export default function TodoList({ $target, initialState }) {
   const $todoList = document.createElement("div");
   $target.appendChild($todoList);
 
@@ -12,18 +12,49 @@ function TodoList({ $target, initialState }) {
   };
 
   this.render = () => {
-    // 실행하면 현재 상태를 기준으로 컴포넌트를 렌더링하는 동작
-
     $todoList.innerHTML = `
     <ul>
         ${this.state
           .map(
-            (todo) => `<li>
-        ${todo.text}</li>`
+            ({ text }) => `<li>
+        ${text}</li>`
           )
           .join("")}
     </ul>`;
   };
 
   this.render();
+}
+
+function TodoEach({ $target, text }) {
+  const $todo = document.createElement("div");
+  const $todoText = document.createElement("span");
+  const $completeButton = document.createElement("button");
+
+  this.state = {
+    isCompleted: false,
+  };
+  this.setState = (nextState) => {
+    this.state = nextState;
+    this.render();
+  };
+
+  this.render = () => {
+    $todoText.textContent = text;
+    $completeButton.textContent = "Done!";
+    $todoText.style.textDecoration = this.state.isCompleted
+      ? "line-through"
+      : "none";
+
+    $todoText.addEventListener("click", () => {
+      this.setState({
+        isCompleted: !this.state.isCompleted,
+      });
+    });
+  };
+  this.render();
+
+  $todo.appendChild($todoText);
+  $todo.appendChild($completeButton);
+  $target.appendChild($todo);
 }
