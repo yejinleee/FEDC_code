@@ -3,6 +3,7 @@ import TodoForm from "./TodoForm.js";
 import { TodoList } from "./TodoList.js";
 import TodoCount from "./TodoCount.js";
 import { storageSetItem, storageGetItem } from "./storage.js";
+import validationCheck from "./validationCheck.js";
 
 let storageTodos = storageGetItem("todos");
 let IDX = storageTodos
@@ -35,10 +36,16 @@ export default function App({ $target, initialState }) {
         },
       ];
       IDX += 1;
-      todoList.setState(nextState);
-      storageSetItem("todos", JSON.stringify(nextState));
-      lenAll++;
-      todoCount.render(lenAll, lenCompleted);
+
+      // 유효값 검사
+      if (validationCheck(nextState)) {
+        todoList.setState(nextState);
+        storageSetItem("todos", JSON.stringify(nextState));
+        lenAll++;
+        todoCount.render(lenAll, lenCompleted);
+      } else {
+        throw new Error("입력값 형식이 잘못되었습니다");
+      }
     },
   });
 
@@ -53,10 +60,13 @@ export default function App({ $target, initialState }) {
           todo.isCompleted = !todo.isCompleted;
         }
       });
-      storageSetItem("todos", JSON.stringify(todos));
-      todoList.setState(todos);
-
-      todoCount.render(lenAll, lenCompleted);
+      if (validationCheck(todos)) {
+        storageSetItem("todos", JSON.stringify(todos));
+        todoList.setState(todos);
+        todoCount.render(lenAll, lenCompleted);
+      } else {
+        throw new Error("입력값 형식이 잘못되었습니다");
+      }
     },
     handleDelete: (idx) => {
       const lastTodos = storageGetItem("todos").filter((e) => e.idx !== idx);

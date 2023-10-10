@@ -1,4 +1,7 @@
 // params.$target : 해당 컴포넌트가 추가될 DOM요소
+
+import validationCheck from "./validationCheck.js";
+
 // params.initialState: 해당 컴포넌트 초기 상태
 export function TodoList({
   $target,
@@ -12,7 +15,11 @@ export function TodoList({
   const $listWrap = document.createElement("div");
   $target.appendChild($listWrap);
 
-  this.state = initialState;
+  if (validationCheck(initialState)) {
+    this.state = initialState;
+  } else {
+    throw new Error("입력값 형식이 잘못되었습니다");
+  }
 
   this.setState = (nextState) => {
     this.state = nextState;
