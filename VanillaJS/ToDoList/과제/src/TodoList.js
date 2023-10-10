@@ -22,68 +22,64 @@ export function TodoList({
     this.state = nextState;
     this.render();
   };
+  let isInit = false;
 
   this.render = () => {
-    $listWrap.innerHTML = `
-    <ul>
-        ${this.state
-          .map(
-            ({ text, isCompleted, idx }) =>
-              `<div class="list_div"><li data-idx = ${idx} class=${
-                isCompleted ? "done" : ""
-              }>${text} </li><button data-idx = ${idx} >🗑️</button></div>`
-          )
-          .join("")}
-    </ul>`;
-
-    $listWrap.querySelectorAll("li").forEach(($li) => {
-      $li.addEventListener("click", (e) => {
-        const idx = e.target.dataset.idx;
-        handleComplete(parseInt(idx));
-        this.render();
-      });
-    });
-    $listWrap.querySelectorAll("button").forEach(($btn) => {
-      $btn.addEventListener("click", (e) => {
-        const idx = e.target.dataset.idx;
-        handleDelete(parseInt(idx));
-        this.render();
-      });
+    const rendering = this.render;
+    if (!isInit) {
+      $listWrap.innerHTML = "";
+    }
+    new TodoEach({
+      $target: $listWrap,
+      state: this.state,
+      handleComplete,
+      handleDelete,
+      rendering,
     });
   };
 
   this.render();
 }
 
-export function TodoEach({ $target, text }) {
-  const $todo = document.createElement("div");
-  const $todoText = document.createElement("span");
-  const $completeButton = document.createElement("button");
-
-  this.state = {
-    isCompleted: false,
-  };
-  this.setState = (nextState) => {
-    this.state = nextState;
-    this.render();
-  };
-
+export function TodoEach({
+  $target,
+  state,
+  handleComplete,
+  handleDelete,
+  rendering,
+}) {
   this.render = () => {
-    $todoText.textContent = text;
-    $completeButton.textContent = "Done!";
-    $todoText.style.textDecoration = this.state.isCompleted
-      ? "line-through"
-      : "none";
+    const $todo = document.createElement("ul");
+    $target.appendChild($todo);
+    state.map(({ text, isCompleted, idx }) => {
+      const todoDiv = document.createElement("div");
+      todoDiv.className = "list_div";
 
-    $todoText.addEventListener("click", () => {
-      this.setState({
-        isCompleted: !this.state.isCompleted,
+      const todoLi = document.createElement("li");
+      todoLi.dataset.idx = idx;
+      todoLi.innerHTML = text;
+      if (isCompleted) {
+        todoLi.className = "done";
+      }
+      todoLi.addEventListener("click", (e) => {
+        const idx = e.target.dataset.idx;
+        handleComplete(parseInt(idx));
+        rendering;
       });
+
+      const newTodoBtn = document.createElement("button");
+      newTodoBtn.dataset.idx = idx;
+      newTodoBtn.innerHTML = "🗑️";
+      newTodoBtn.addEventListener("click", (e) => {
+        const idx = e.target.dataset.idx;
+        handleDelete(parseInt(idx));
+        rendering;
+      });
+
+      todoDiv.appendChild(todoLi);
+      todoDiv.appendChild(newTodoBtn);
+      $todo.appendChild(todoDiv);
     });
   };
   this.render();
-
-  $todo.appendChild($todoText);
-  $todo.appendChild($completeButton);
-  $target.appendChild($todo);
 }

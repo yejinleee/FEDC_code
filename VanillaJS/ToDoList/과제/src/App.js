@@ -12,14 +12,6 @@ let IDX =
     : 0;
 
 export default function App({ $target, initialState }) {
-  let lenAll = initialState.length;
-  let lenCompleted = 0;
-  initialState.forEach((todo) => {
-    if (todo.isCompleted) {
-      lenCompleted++;
-    }
-  });
-
   new Header({
     $target,
     text: "Simple Todo List",
@@ -42,8 +34,7 @@ export default function App({ $target, initialState }) {
       if (validationCheck(nextState)) {
         todoList.setState(nextState);
         storageSetItem("todos", JSON.stringify(nextState));
-        lenAll++;
-        todoCount.render(lenAll, lenCompleted);
+        todoCount.render(initialState);
       } else {
         throw new Error("입력값 형식이 잘못되었습니다");
       }
@@ -57,14 +48,13 @@ export default function App({ $target, initialState }) {
       const todos = storageGetItem("todos");
       todos.forEach((todo) => {
         if (todo.idx === idx) {
-          todo.isCompleted ? lenCompleted-- : lenCompleted++;
           todo.isCompleted = !todo.isCompleted;
         }
       });
       if (validationCheck(todos)) {
         storageSetItem("todos", JSON.stringify(todos));
         todoList.setState(todos);
-        todoCount.render(lenAll, lenCompleted);
+        todoCount.render();
       } else {
         throw new Error("입력값 형식이 잘못되었습니다");
       }
@@ -73,14 +63,11 @@ export default function App({ $target, initialState }) {
       const lastTodos = storageGetItem("todos").filter((e) => e.idx !== idx);
       window.localStorage.setItem("todos", JSON.stringify(lastTodos));
       todoList.setState(lastTodos);
-      lenAll--;
-      todoCount.render(lenAll, lenCompleted);
+      todoCount.render();
     },
   });
 
   const todoCount = new TodoCount({
     $target,
-    lenAll,
-    lenCompleted,
   });
 }
