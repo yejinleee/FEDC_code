@@ -6,6 +6,9 @@ export function TodoList({
   handleComplete,
   handleDelete,
 }) {
+  if (!new.target) {
+    throw new Error("컴포넌트를 생성자 함수로 호출해주세요");
+  }
   const $listWrap = document.createElement("div");
   $target.appendChild($listWrap);
 

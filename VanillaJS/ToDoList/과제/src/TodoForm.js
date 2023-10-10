@@ -1,4 +1,7 @@
 export default function TodoForm({ $target, onSubmit }) {
+  if (!new.target) {
+    throw new Error("컴포넌트를 생성자 함수로 호출해주세요");
+  }
   const $form = document.createElement("form");
   $target.appendChild($form);
 

@@ -1,4 +1,7 @@
 export default function TodoCount({ $target, lenAll, lenCompleted }) {
+  if (!new.target) {
+    throw new Error("컴포넌트를 생성자 함수로 호출해주세요");
+  }
   const $count = document.createElement("div");
   $target.appendChild($count);
 
