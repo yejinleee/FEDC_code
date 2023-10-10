@@ -1,6 +1,7 @@
 import Header from "./Header.js";
 import TodoForm from "./TodoForm.js";
 import { TodoList } from "./TodoList.js";
+import TodoCount from "./TodoCount.js";
 import { storageSetItem, storageGetItem } from "./storage.js";
 
 let storageTodos = storageGetItem("todos");
@@ -9,6 +10,14 @@ let IDX = storageTodos
   : 0;
 
 export default function App({ $target, initialState }) {
+  let lenAll = initialState.length;
+  let lenCompleted = 0;
+  initialState.forEach((todo) => {
+    if (todo.isCompleted) {
+      lenCompleted++;
+    }
+  });
+
   new Header({
     $target,
     text: "Simple Todo List",
@@ -28,6 +37,8 @@ export default function App({ $target, initialState }) {
       IDX += 1;
       todoList.setState(nextState);
       storageSetItem("todos", JSON.stringify(nextState));
+      lenAll++;
+      todoCount.render(lenAll, lenCompleted);
     },
   });
 
@@ -38,16 +49,27 @@ export default function App({ $target, initialState }) {
       const todos = storageGetItem("todos");
       todos.forEach((todo) => {
         if (todo.idx === idx) {
+          todo.isCompleted ? lenCompleted-- : lenCompleted++;
           todo.isCompleted = !todo.isCompleted;
         }
       });
       storageSetItem("todos", JSON.stringify(todos));
       todoList.setState(todos);
+
+      todoCount.render(lenAll, lenCompleted);
     },
     handleDelete: (idx) => {
       const lastTodos = storageGetItem("todos").filter((e) => e.idx !== idx);
       window.localStorage.setItem("todos", JSON.stringify(lastTodos));
       todoList.setState(lastTodos);
+      lenAll--;
+      todoCount.render(lenAll, lenCompleted);
     },
+  });
+
+  const todoCount = new TodoCount({
+    $target,
+    lenAll,
+    lenCompleted,
   });
 }
