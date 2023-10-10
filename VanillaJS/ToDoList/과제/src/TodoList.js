@@ -1,8 +1,5 @@
-// params.$target : 해당 컴포넌트가 추가될 DOM요소
-
 import validationCheck from "./validationCheck.js";
 
-// params.initialState: 해당 컴포넌트 초기 상태
 export function TodoList({
   $target,
   initialState,
@@ -27,15 +24,6 @@ export function TodoList({
   };
 
   this.render = () => {
-    // $listWrap.replaceChildren(); //// 투두를 추가해서 새로 렌더링될때 이전값에 추가로 전부다 생기니까 한번 리셋하고 전체를 그린다
-
-    // // 실행하면 현재 상태를 기준으로 컴포넌트를 렌더링하는 동작
-    // this.state.map(({ text, isCompleted }) => {
-    //   // console.log(text);
-    //   new TodoEach({ $target: $listWrap, text });
-
-    //   /// 이거 그냥 $listWrap 넘기며 안되고 $target: $listWrap, 이렇게 키벨류 줘라.
-    // });
     $listWrap.innerHTML = `
     <ul>
         ${this.state
@@ -68,7 +56,6 @@ export function TodoList({
 }
 
 export function TodoEach({ $target, text }) {
-  // console.log("tt", $target);
   const $todo = document.createElement("div");
   const $todoText = document.createElement("span");
   const $completeButton = document.createElement("button");

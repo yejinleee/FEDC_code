@@ -5,7 +5,7 @@ import TodoCount from "./TodoCount.js";
 import { storageSetItem, storageGetItem } from "./storage.js";
 import validationCheck from "./validationCheck.js";
 
-let storageTodos = storageGetItem("todos");
+const storageTodos = storageGetItem("todos");
 let IDX = storageTodos
   ? storageGetItem("todos")[storageTodos.length - 1].idx + 1
   : 0;

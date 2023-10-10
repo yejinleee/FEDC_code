@@ -23,6 +23,7 @@ export default function TodoForm({ $target, onSubmit }) {
           onSubmit(text);
         }
       });
+      isInit = !isInit;
     }
   };
   this.render();
