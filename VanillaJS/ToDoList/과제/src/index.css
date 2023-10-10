@@ -14,7 +14,7 @@ form input {
   padding: 0.5rem;
 }
 form button,
-.listDiv button {
+.list_div button {
   border: none;
   background-color: transparent;
   cursor: pointer;
@@ -31,12 +31,12 @@ ul {
   list-style: none;
   padding: 0px;
 }
-.listDiv {
+.list_div {
   display: flex;
   margin-bottom: 5px;
   align-items: center;
 }
-.listDiv li {
+.list_div li {
   width: 200px;
   word-break: break-all;
   white-space: normal;
@@ -48,13 +48,13 @@ ul {
   display: flex;
   align-items: center;
 }
-.listDiv li:hover {
+.list_div li:hover {
   background-color: #dadce0;
 }
-.listDiv button:hover {
+.list_div button:hover {
   box-shadow: 1px 1px 3px 1px #dadce0 inset;
 }
-.listDiv button:hover {
+.list_div button:hover {
   box-shadow: 1px 1px 3px 1px #dadce0 inset;
 }
 .done {
