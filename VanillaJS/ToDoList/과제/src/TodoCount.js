@@ -6,7 +6,11 @@ export default function TodoCount({ $target, lenAll, lenCompleted }) {
   $target.appendChild($count);
 
   this.render = (lenAll, lenCompleted) => {
-    $count.innerHTML = `전체 투두 갯수 ${lenAll} 중 ${lenCompleted} 개 완료 !`;
+    if (lenAll) {
+      $count.innerHTML = `You did ${lenCompleted} out of ${lenAll} !`;
+    } else {
+      $count.innerHTML = "";
+    }
   };
   this.render(lenAll, lenCompleted);
 }

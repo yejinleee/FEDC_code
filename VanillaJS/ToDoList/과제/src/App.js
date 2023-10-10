@@ -6,9 +6,10 @@ import { storageSetItem, storageGetItem } from "./storage.js";
 import validationCheck from "./validationCheck.js";
 
 const storageTodos = storageGetItem("todos");
-let IDX = storageTodos
-  ? storageGetItem("todos")[storageTodos.length - 1].idx + 1
-  : 0;
+let IDX =
+  storageTodos.length > 0
+    ? storageGetItem("todos")[storageTodos.length - 1].idx + 1
+    : 0;
 
 export default function App({ $target, initialState }) {
   let lenAll = initialState.length;

@@ -10,7 +10,7 @@ export default function TodoForm({ $target, onSubmit }) {
   this.render = () => {
     $form.innerHTML = `
       <input type = "text" name = "todo"/>
-      <button>ADD</button>`;
+      <button>➕</button>`;
     if (!isInit) {
       $form.addEventListener("submit", (e) => {
         e.preventDefault();

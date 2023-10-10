@@ -28,10 +28,10 @@ export function TodoList({
     <ul>
         ${this.state
           .map(
-            ({ text, isCompleted, idx }) => `<li data-idx = ${idx} class=${
-              isCompleted ? "done" : ""
-            }>
-        ${text} </li><button data-idx = ${idx} >X</button>`
+            ({ text, isCompleted, idx }) =>
+              `<div class="listDiv"><li data-idx = ${idx} class=${
+                isCompleted ? "done" : ""
+              }>${text} </li><button data-idx = ${idx} >🗑️</button></div>`
           )
           .join("")}
     </ul>`;
