@@ -9,7 +9,7 @@ export default function ProductOptions({ $target, initialState, onSelect }) {
   };
   this.render = () => {
     if (this.state && Array.isArray(this.state)) {
-      $select.innerHTML = `${this.state
+      $select.innerHTML = `<option>선택하세요</option>${this.state
         .map(
           ({ id, optionName, optionPrice, stock }) =>
             `<option value = "${id}" ${
