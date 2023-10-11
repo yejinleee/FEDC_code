@@ -1,7 +1,12 @@
 import ProductOptions from "./ProductOptions.js";
 import { request } from "./api.js";
 import Cart from "./Cart.js";
-
+//state
+// {
+// 	productId : 1,
+// 	product: Product, //첫번째 api로 불러온 product 데이터
+// 	optionData: [], // 우리에게 필요한 데이터 모아서저장했던 데이터
+// }
 export default function ProductPage({ $target, initialState }) {
   const $product = document.createElement("div");
   $target.appendChild($product);
@@ -12,34 +17,43 @@ export default function ProductPage({ $target, initialState }) {
     $target: $product,
     initialState: [],
     onSelect: (option) => {
-      console.log(option);
+      const nextState = { ...this.state }; /// 객체임!
+      const { selectedOptions } = nextState;
+      const selectedOptionIndex = selectedOptions.findIndex(
+        (selectedOption) => selectedOption.optionId === option.id
+      ); ///그냥 .id
+      // -1이었다가 0 이됨. -1일때는 실행되면 안되니까
+      if (selectedOptionIndex > -1) {
+        nextState.selectedOptions[selectedOptionIndex].ea++;
+      } else {
+        nextState.selectedOptions.push({
+          optionId: option.id, ///그냥 .id
+          optionName: option.optionName,
+          optionPrice: option.optionPrice,
+          ea: 1,
+        });
+      }
+      this.setState(nextState);
     },
   });
 
   const cart = new Cart({
     $target: $product,
     initialState: {
-      productName: "기본상품명",
-      basePrice: 10000,
-      selectedOptions: [
-        {
-          optionName: "cart더미_옵션1",
-          optionPrice: 1000,
-          ea: 1,
-        },
-        {
-          optionName: "cart더미_옵션2",
-          optionPrice: 2002,
-          ea: 2,
-        },
-        {
-          optionName: "cart더미_옵션3",
-          optionPrice: 300,
-          ea: 3, //선택한 갯수
-        },
-      ],
+      productName: "",
+      basePrice: 0,
+      selectedOptions: [],
     },
-    onRemove: () => {},
+    onRemove: (selectedOptionIndex) => {
+      const nextState = { ...this.state };
+      // selectedOptionIndex에 해당하는걸 빼자
+      // array에선 slice이용 혹은 splice!!
+      //splice : selectedOptionIndex에서부터 1개 빼서 새로운 배열 만들라는 뜻
+      // 그걸 받는게 없으니까 그냥 날라가는겨
+      nextState.selectedOptions.splice(selectedOptionIndex, 1);
+
+      this.setState(nextState);
+    },
   });
 
   this.setState = (nextState) => {
@@ -49,11 +63,15 @@ export default function ProductPage({ $target, initialState }) {
       return;
     }
     this.state = nextState;
+    const { product, selectedOptions, optionData } = this.state;
+
     productOptions.setState(this.state.optionData);
-    // Cart.setState({
-    //   basePrice: product.basePrice,
-    //   selectedProduct: this.state.selectedProduct,
-    // });
+
+    cart.setState({
+      productName: product.name, /// name 임@
+      basePrice: product.basePrice,
+      selectedOptions: selectedOptions, /// 키이름 selectedOptions임!
+    });
   };
 
   this.render = () => {
@@ -68,6 +86,7 @@ export default function ProductPage({ $target, initialState }) {
           ...this.state,
           product, // 프로덕트(이하소분류)정보
           optionData: [],
+          selectedOptions: [], /// .... 이걸추가해야해암튼
         });
         return request(`/product-options?product.id=${product.id}`);
       })

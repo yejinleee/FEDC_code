@@ -26,19 +26,20 @@ export default function Cart({ $target, initialState, onRemove }) {
 
   this.render = () => {
     const { productName, basePrice, selectedOptions } = this.state;
+
     $cart.innerHTML = `
     <ul>
       ${
         Array.isArray(selectedOptions) &&
         selectedOptions
           .map(
-            (option) => `
-          <li>
+            (option, idx) => `
+          <li data-index =${idx} class="cartItem">
             ${productName} - ${option.optionName} | ${
               basePrice + option.optionPrice
             }
             x ${option.ea}개
-          </li>`
+          <button class="remove">X</button></li>`
           )
           .join("")
       }
@@ -46,6 +47,18 @@ export default function Cart({ $target, initialState, onRemove }) {
     <div>
       총 가격 : ${calcurateTotalPrice()}
     </div>`;
+
+    $cart.querySelectorAll(".remove").forEach(($button) => {
+      $button.addEventListener("click", (e) => {
+        // closest ㄴㅐ 상위로 가장 가까운 지정한 요소
+        const $li = e.target.closest(".cartItem");
+
+        if ($li) {
+          const { index } = $li.dataset;
+          onRemove(parseInt(index));
+        }
+      });
+    });
   };
 
   this.render();
