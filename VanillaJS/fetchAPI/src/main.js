@@ -1,45 +1,21 @@
 import ProductOptions from "./ProductOptions.js";
+import ProductPage from "./ProductPage.js";
 import { request } from "./api.js";
 
 const $target = document.querySelector("#app");
 
-const fetchOptionData = (productId) => {
-  return request(`/products/${productId}`)
-    .then((product) => {
-      return request(`/product-options?product.id=${product.id}`);
-    })
-    .then((productOptions) => {
-      return Promise.all([
-        Promise.resolve(productOptions),
-        Promise.all(
-          productOptions
-            .map((productOption) => productOption.id)
-            .map((id) => {
-              return request(`/product-option-stocks?productOption.id=${id}`);
-            })
-        ),
-      ]);
-    })
-    .then((data) => {
-      const [optionData, stocksData] = data;
-      const productData = optionData.map((optionDataEach, idx) => {
-        const stock = stocksData[idx][0].stock;
-        return {
-          id: optionDataEach.id,
-          optionName: optionDataEach.optionName,
-          optionPrice: optionDataEach.optionPrice,
-          stock: stock,
-        };
-      });
-      productOptions.setState(productData);
-    });
-};
-fetchOptionData(1);
-
-const productOptions = new ProductOptions({
+new ProductPage({
   $target,
-  initialState: [],
-  onSelect: (selectedOption) => {
-    console.log(selectedOption.optionName);
+  initialState: {
+    productId: 1,
   },
 });
+
+/*
+state 구조
+{
+	productId : 1,
+	product: Product, //첫번째 api로 불러온 product 데이터
+	optionData: [], // 우리에게 필요한 데이터 모아서저장했던 데이터
+}
+*/
