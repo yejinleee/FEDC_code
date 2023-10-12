@@ -1,6 +1,6 @@
-import ProductOptions from "./ProductOptions.js";
-import { request } from "./api.js";
-import Cart from "./Cart.js";
+import ProductOptions from "../ProductOptions.js";
+import { request } from "../api.js";
+import Cart from "../Cart.js";
 //state
 // {
 // 	productId : 1,
@@ -9,7 +9,7 @@ import Cart from "./Cart.js";
 // }
 export default function ProductPage({ $target, initialState }) {
   const $product = document.createElement("div");
-  $target.appendChild($product);
+  // $target.appendChild($prod uct); //바로 append 놉!
 
   this.state = initialState;
 
@@ -72,12 +72,14 @@ export default function ProductPage({ $target, initialState }) {
       basePrice: product.basePrice,
       selectedOptions: selectedOptions, /// 키이름 selectedOptions임!
     });
+
+    this.render(); // 여기에 추가
   };
 
   this.render = () => {
-    // 마크업을 그릴건 아님
+    $target.appendChild($product);
   };
-  this.render();
+  // this.render(); //이거도 실행 x
 
   const fetchOptionData = (productId) => {
     return request(`/products/${productId}`)
@@ -123,5 +125,6 @@ export default function ProductPage({ $target, initialState }) {
       });
   };
 
-  fetchOptionData(this.state.productId);
+  // fetchOptionData(this.state.productId);
+  // 실제로 렌더링이 되지 않더라도 ProductPage가 생성되는 순간 fetchOptionData등이 실행되면서 문제 생길 수 있음
 }
