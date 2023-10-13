@@ -1,13 +1,11 @@
+import { setItem, getItem, removeItem } from "./storage.js";
+
+const TODO_TEMP_SAVE_KEY = "TODO_TEMP_SAVE_KEY";
+
 export default function TodoForm({ $target, onSubmit }) {
   const $form = document.createElement("form");
 
   $target.appendChild($form);
-
-  //this.state를 두면 서버와 통신중일때 ui를 막는 효과를 줄 수있다.
-  //이런 블로킹을 최소화 하면서 this.state 없이도 서버와의 통신도 문제없이 하는 방법을 알아보자.
-  // this.state = {
-  //   content: "",
-  // };
 
   this.render = () => {
     $form.innerHTML = `
@@ -24,7 +22,16 @@ export default function TodoForm({ $target, onSubmit }) {
 
     onSubmit(content);
     $input.value = ""; // 이전 값 지우기
+    removeItem(TODO_TEMP_SAVE_KEY);
   });
 
   this.render();
+
+  const $input = $form.querySelector("input");
+  $input.value = getItem(TODO_TEMP_SAVE_KEY, "", "");
+
+  $input.addEventListener("keydown", (e) => {
+    //"change"말고 "keydown"이어야 키 입력시마다 변경됨
+    setItem(TODO_TEMP_SAVE_KEY, e.target.value);
+  });
 }
