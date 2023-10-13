@@ -18,13 +18,15 @@ export default function TodoList({
   };
 
   this.render = () => {
-    if (this.state.length === 0) {
+    const { isTodoLoading, todos } = this.state;
+
+    if (!isTodoLoading && todos.length === 0) {
       $todo.innerHTML = "할일이 없습니다.";
       return;
     }
     $todo.innerHTML = `
       <ul>
-      ${this.state
+      ${todos
         .map(
           ({ _id, content, isCompleted }) => `
       <li data-id = "${_id}" class="todo-item">

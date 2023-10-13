@@ -1,4 +1,4 @@
-export default function h1({ $target, initialState }) {
+export default function Header({ $target, initialState }) {
   const $h1 = document.createElement("h1");
   $target.appendChild($h1);
 
@@ -8,9 +8,12 @@ export default function h1({ $target, initialState }) {
     this.state = nextState;
     this.render();
   };
+
   this.render = () => {
+    const { username, isLoading } = this.state;
     $h1.innerHTML = `
-      <h1>${this.state}의 Todo APP</h1>
+      <h1>${username}의 Todo APP</h1>
+      <div>${isLoading ? "Loading ..." : ""}</div>
     `;
   };
   this.render();
