@@ -27,10 +27,6 @@ export default function App({ $target }) {
         content,
         isCompleted: false,
       };
-      this.setState({
-        ...this.state,
-        todos: [...this.state.todos, todo],
-      });
       await request(`/${this.state.username}`, {
         method: "POST",
         body: JSON.stringify(todo),
