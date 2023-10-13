@@ -1,5 +1,4 @@
-import TodoForm from "./TodoForm.js";
-import TodoList from "./TodoList.js";
+import App from "./App.js";
 
 const DUMMY_DATA = [
   {
@@ -16,20 +15,4 @@ const DUMMY_DATA = [
 
 const $target = document.querySelector("#app");
 
-new TodoForm({
-  $target,
-  onSubmit: (content) => {
-    console.log("onSubmit", content);
-  },
-});
-
-new TodoList({
-  $target,
-  initialState: DUMMY_DATA,
-  onToggle: (id) => {
-    console.log("onToggle", id);
-  },
-  onRemove: (id) => {
-    console.log(id);
-  },
-});
+new App({ $target });

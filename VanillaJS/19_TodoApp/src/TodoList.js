@@ -10,12 +10,18 @@ export default function TodoList({
 
   this.state = initialState;
   // 투두들을 가진 배열
+
   this.setState = (nextState) => {
     this.state = nextState;
+    console.log(this.state);
     this.render();
   };
 
   this.render = () => {
+    if (this.state.length === 0) {
+      $todo.innerHTML = "할일이 없습니다.";
+      return;
+    }
     $todo.innerHTML = `
       <ul>
       ${this.state
