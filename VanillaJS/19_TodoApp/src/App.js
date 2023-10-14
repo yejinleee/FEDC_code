@@ -3,6 +3,7 @@ import UserList from "./UserList.js";
 import TodoForm from "./TodoForm.js";
 import TodoList from "./TodoList.js";
 import { request } from "./api.js";
+import { parse } from "./querystring.js";
 
 export default function App({ $target }) {
   const $userListContainer = document.createElement("div");
@@ -46,11 +47,12 @@ export default function App({ $target }) {
     $target: $userListContainer,
     initialState: this.state.userList,
     onSelect: async (username) => {
+      history.pushState(null, null, `/?selectedUsername=${username}`);
       this.setState({
         ...this.state,
         selectedUsername: username,
       });
-      await fetchTodo();
+      await fetchTodos();
     },
   });
 
@@ -80,7 +82,7 @@ export default function App({ $target }) {
         method: "POST",
         body: JSON.stringify(todo),
       });
-      await fetchTodo();
+      await fetchTodos();
 
       if (isFirstTodoAdd) {
         await fetchUserList();
@@ -108,13 +110,10 @@ export default function App({ $target }) {
         todos: nextTodos,
       });
 
-      await request(
-        `/${this.state.selectedUsername}/${id}/toggle/?delay=2000`,
-        {
-          method: "PUT",
-        }
-      );
-      await fetchTodo();
+      await request(`/${this.state.selectedUsername}/${id}/toggle`, {
+        method: "PUT",
+      });
+      await fetchTodos();
     },
 
     onRemove: async (id) => {
@@ -127,10 +126,10 @@ export default function App({ $target }) {
         todos: nextTodos,
       });
 
-      await request(`/${this.state.selectedUsername}/${id}/?delay=500`, {
+      await request(`/${this.state.selectedUsername}/${id}`, {
         method: "DELETE",
       });
-      await fetchTodo();
+      await fetchTodos();
     },
   });
 
@@ -142,14 +141,14 @@ export default function App({ $target }) {
     });
   };
 
-  const fetchTodo = async () => {
+  const fetchTodos = async () => {
     const { selectedUsername } = this.state;
     if (selectedUsername) {
       this.setState({
         ...this.state,
         isTodoLoading: true,
       });
-      const todos = await request(`/${selectedUsername}?delay=1000`);
+      const todos = await request(`/${selectedUsername}`);
       console.log(todos);
       this.setState({
         ...this.state, // 이건 {selectedUsername : '', todos : []}
@@ -166,12 +165,30 @@ export default function App({ $target }) {
 
   // 원랜 이렇게
   // fetchUserList(); // 지금 상태에선 await 못붙인다. App에 async없어서. 지금은 호출하고 후작업 없이 끝이라 괜찮지만 묶어두는게 좋을듯
-  // fetchTodo(); // 이거 또한 이젠 처음부터 부를 필요가 없다.
+  // fetchTodos(); // 이거 또한 이젠 처음부터 부를 필요가 없다.
 
   const init = async () => {
     await fetchUserList();
+
+    const { search } = location;
+    if (search.length > 0) {
+      const { selectedUsername } = parse(search.substring(1));
+
+      if (selectedUsername) {
+        this.setState({
+          ...this.state,
+          selectedUsername: selectedUsername,
+        });
+      }
+    }
+    await fetchTodos();
   };
 
   this.render();
   init();
+
+  window /
+    addEventListener("popstate", () => {
+      init();
+    });
 }
