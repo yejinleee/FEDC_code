@@ -17,9 +17,8 @@ export default function TodoForm({ $target, onSubmit }) {
   $form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const $input = document.querySelector("input");
+    const $input = $form.querySelector("input"); //여기가 document. 였더니 $input을 못찾는것 같아서 오류
     const content = $input.value;
-
     onSubmit(content);
     $input.value = ""; // 이전 값 지우기
     removeItem(TODO_TEMP_SAVE_KEY);

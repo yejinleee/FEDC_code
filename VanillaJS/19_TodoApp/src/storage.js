@@ -4,7 +4,6 @@ export const setItem = (key, value) => {
   try {
     // setItem은 브라우저 용량들의 이슈로 오류가 날 수 있으므로 try catch 이용 권장
     storage.setItem(key, JSON.stringify(value));
-    console.log(key, value);
   } catch (e) {
     console.log(e);
   }
