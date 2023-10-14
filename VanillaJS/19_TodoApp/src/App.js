@@ -65,6 +65,8 @@ export default function App({ $target }) {
   new TodoForm({
     $target: $todoListContainer,
     onSubmit: async (content) => {
+      const isFirstTodoAdd = this.state.todos.length === 0; //아래 낙관적 업데이트보다 먼저 실행해야함
+
       const todo = {
         content,
         isCompleted: false,
@@ -73,11 +75,16 @@ export default function App({ $target }) {
         ...this.state,
         todos: [...this.state.todos, todo],
       });
+
       await request(`/${this.state.selectedUsername}`, {
         method: "POST",
         body: JSON.stringify(todo),
       });
       await fetchTodo();
+
+      if (isFirstTodoAdd) {
+        await fetchUserList();
+      }
     },
     // POST를 보낼때 서버가 이해할 수 있는 형식 중 하나가 json.
     // 그래서 body에 문자열로 처리된 Json을 보내기 위해 JSON.stringify

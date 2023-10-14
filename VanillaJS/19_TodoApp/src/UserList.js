@@ -18,7 +18,7 @@ export default function UserList({ $target, initialState, onSelect }) {
           .join("")}
         <li>
           <form>
-            <input class="new-user" type = "text" placeholder="add username">
+            <input class="new-user" type= "text" placeholder="add username" />
           </form>
         </li>
       </ul>
@@ -40,7 +40,6 @@ export default function UserList({ $target, initialState, onSelect }) {
   $userList.addEventListener("submit", (e) => {
     const $newUser = $userList.querySelector(".new-user");
     const newUserValue = $newUser.value;
-
     if (newUserValue.length > 0) {
       onSelect($newUser.value); // 기존 목록중 선택한거 뿐만아니라 새로운 유저 추가시에도 그 유저의 투두 목록 보여줘야하니까
       $newUser.value = "";
