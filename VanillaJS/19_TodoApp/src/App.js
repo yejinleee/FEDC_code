@@ -187,8 +187,7 @@ export default function App({ $target }) {
   this.render();
   init();
 
-  window /
-    addEventListener("popstate", () => {
-      init();
-    });
+  window.addEventListener("popstate", () => {
+    init();
+  });
 }
