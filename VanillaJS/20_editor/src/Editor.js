@@ -14,6 +14,9 @@ export default function Editor({
 
   this.setState = (nextState) => {
     this.state = nextState;
+    $editor.querySelector("[name=title]").value = this.state.title;
+    $editor.querySelector("[name=content]").value = this.state.content;
+    console.log(this.state);
     this.render();
   };
 
