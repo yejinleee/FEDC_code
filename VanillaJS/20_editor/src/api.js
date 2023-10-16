@@ -4,7 +4,7 @@ export const request = async (url, options = {}) => {
   try {
     const res = await fetch(`${API_END_POINT}${url}`, {
       ...options,
-      header: {
+      headers: {
         "Content-Type": "application/json",
       },
     });
