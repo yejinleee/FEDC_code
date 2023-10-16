@@ -32,15 +32,22 @@ export default function PostEditPage({ $target, initialState }) {
         });
 
         const isNew = this.state.postId === "new";
+        console.log(this.state.postId);
         if (isNew) {
           const createdPost = await request("/posts", {
             method: "POST",
-            body: JSON.stringify(this.state),
+            body: JSON.stringify(post), //this.state 아님!
           });
+          console.log(createdPost);
           // /new이던 상태를 생성된 포스트의 id 값을 대치를 해야함!
           history.replaceState(null, null, `/posts/${createdPost.id}`);
           removeItem(postLocalSaveKey);
         } else {
+          await request(`/posts/${post.id}`, {
+            method: "PUT",
+            body: JSON.stringify(post),
+          });
+          removeItem(postLocalSaveKey);
         }
       }, 1000);
     },
