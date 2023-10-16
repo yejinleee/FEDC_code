@@ -1,6 +1,8 @@
 import { getItem, removeItem, setItem } from "./storage.js";
 import { request } from "./api.js";
 import Editor from "./Editor.js";
+import { pushRoute } from "./router.js";
+import LinkButton from "./LinkButton.js";
 
 export default function PostEditPage({ $target, initialState }) {
   const $page = document.createElement("div");
@@ -42,6 +44,12 @@ export default function PostEditPage({ $target, initialState }) {
           // /new이던 상태를 생성된 포스트의 id 값을 대치를 해야함!
           history.replaceState(null, null, `/posts/${createdPost.id}`);
           removeItem(postLocalSaveKey);
+
+          // 무한증식 버그 해결!
+          // url을 넣고 페이지의 state도 갱신해줘야 해!!
+          this.setState({
+            postId: createdPost.id,
+          });
         } else {
           await request(`/posts/${post.id}`, {
             method: "PUT",
@@ -54,11 +62,22 @@ export default function PostEditPage({ $target, initialState }) {
   });
 
   this.setState = async (nextState) => {
+    console.log(this.state.postId, nextState.postId);
     if (this.state.postId !== nextState.postId) {
       postLocalSaveKey = `temp-post"-${nextState.postId}`;
 
-      this.state = nextState;
-      await fetchPost();
+      this.state = nextState; //원래는 이렇게만이어서 New POST 버튼으로 /new오면 아무것도 안뜸! ㅠㅠ
+      // 해결
+      if (this.state.postId === "new") {
+        const post = getItem(postLocalSaveKey, {
+          title: "",
+          content: "",
+        });
+        this.render(); // this.state만 넣어주고 정작 이 PostEditPage가 렌더가 안됬었던 문제임.
+        editor.setState(post);
+      } else {
+        await fetchPost();
+      }
       return;
     }
     this.state = nextState; // 렌더전에!
@@ -102,5 +121,19 @@ export default function PostEditPage({ $target, initialState }) {
     }
   };
 
-  // this.render();
+  new LinkButton({
+    $target: $page,
+    initialState: {
+      text: "목록으로",
+      link: "/",
+    },
+  });
+
+  // // 목록으로 가는 버튼
+  // const $moveListButton = document.createElement("button");
+  // $moveListButton.innerText = "목록으로";
+  // $page.appendChild($moveListButton);
+  // $moveListButton.addEventListener("click", () => {
+  //   pushRoute("/");
+  // });
 }

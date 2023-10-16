@@ -16,5 +16,4 @@ export const request = async (url, options = {}) => {
   } catch (e) {
     console.log(e);
   }
-  s;
 };

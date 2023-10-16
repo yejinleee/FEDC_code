@@ -1,17 +1,29 @@
+import LinkButton from "./LinkButton.js";
 import PostList from "./PostList.js";
 import { request } from "./api.js";
+import { pushRoute } from "./router.js";
 
 export default function PostsPage({ $target }) {
   const $page = document.createElement("div");
 
   const postLists = new PostList({
-    $target,
+    $target: $page,
     initialState: [],
   });
 
-  const $newPostButton = document.createElement("button");
-  $newPostButton.textContent = "NEW POST";
-  $page.appendChild($newPostButton);
+  new LinkButton({
+    $target: $page,
+    initialState: {
+      text: "New POST",
+      link: "/posts/new",
+    },
+  });
+  // const $newPostButton = document.createElement("button");
+  // $newPostButton.textContent = "NEW POST";
+  // $page.appendChild($newPostButton);
+  // $newPostButton.addEventListener("click", () => {
+  //   pushRoute("/posts/new");
+  // });
 
   const fetchPosts = async () => {
     const posts = await request("/posts");
