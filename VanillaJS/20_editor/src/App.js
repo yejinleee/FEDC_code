@@ -30,7 +30,7 @@ export default function App({ $target }) {
     $target.innerHTML = "";
     const { pathname } = window.location;
     if (pathname === "/") {
-      postsPage.render();
+      postsPage.setState();
     } else if (pathname.indexOf("/posts/") === 0) {
       const [, , postId] = pathname.split("/");
       postEditPage.setState({ postId }); // render아니고 setState 호출임
