@@ -11,6 +11,22 @@ export default function PhotoList({ $target, initialState, onScrollEnded }) {
     this.render();
   };
 
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !this.state.isLoading && !isLast) {
+          console.log("화면 끝", entry);
+          onScrollEnded();
+        }
+      });
+    },
+    {
+      threshold: 0.5,
+    }
+  );
+
+  let $lastLi = null;
+
   this.render = () => {
     const { isLoading, photos } = this.state;
 
@@ -26,12 +42,22 @@ export default function PhotoList({ $target, initialState, onScrollEnded }) {
       if ($photos.querySelector(`[data-id="${photo.id}"]`) === null) {
         const $li = document.createElement("li");
         $li.setAttribute("data-id", photo.id);
-        $li.style = "list-style: none";
+        $li.style = "list-style: none; min-height: 500px"; // 최소값을 두어야 안전하게 스크롤위치 파악 가능
         $li.innerHTML = `<img src="${photo.imagePath}" width="100%"></img>`;
 
         $photos.appendChild($li);
       }
     });
+
+    const $nextLi = $photos.querySelector("li:last-child");
+    if ($nextLi) {
+      if ($lastLi) {
+        //이전 감시 대상 없애줘야함!
+        observer.unobserve($lastLi);
+      }
+      $lastLi = $nextLi;
+      observer.observe($lastLi); //관찰대상으로 등록
+    }
   };
 
   this.render();
