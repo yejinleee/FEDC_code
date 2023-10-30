@@ -11,6 +11,7 @@ export default function App({ $target }) {
     nextStart: 0, //limit갯수만큼 계속 더해지도록
     photos: [],
     isLoading: false, //로딩중임을 나타낸다. isLoading:true인 상태에선 추가적으로 데이터 요청을 못하도록 막는 등의 역할 가능
+    totalCount: 0,
   };
 
   const photoListComponent = new PhotoList({
@@ -18,6 +19,7 @@ export default function App({ $target }) {
     initialState: {
       isLoading: this.state.isLoading,
       photos: this.state.photos,
+      totalCount: this.state.totalCount,
     },
     onScrollEnded: async () => {
       await fetchPhotos();
@@ -29,6 +31,7 @@ export default function App({ $target }) {
     photoListComponent.setState({
       isLoading: this.state.isLoading,
       photos: nextState.photos,
+      totalCount: this.state.totalCount,
     });
   };
 
@@ -46,10 +49,21 @@ export default function App({ $target }) {
       ...this.state,
       nextStart: nextStart + limit,
       photos: [...this.state.photos, ...photos],
-      // photos: this.state.photos.concat(photos), //concat사용버전
       isLoading: false,
+      totalCount: this.state.totalCount,
     });
   };
 
-  fetchPhotos();
+  const init = async () => {
+    const totalCount = await request("/cat-photos/count");
+
+    this.setState({
+      ...this.state,
+      totalCount,
+    });
+
+    await fetchPhotos();
+  };
+
+  init();
 }
