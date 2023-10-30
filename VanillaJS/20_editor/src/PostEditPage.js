@@ -40,7 +40,7 @@ export default function PostEditPage({ $target, initialState }) {
             method: "POST",
             body: JSON.stringify(post), //this.state 아님!
           });
-          console.log(createdPost);
+          console.log(createdPost); //{id: 2175, title: '', content: '43', published_at: '2023-10-17T08:03:12.383Z', created_at: '2023-10-17T08:03:12.384Z', …} 이렇게 넣어지는 값 반환
           // /new이던 상태를 생성된 포스트의 id 값을 대치를 해야함!
           history.replaceState(null, null, `/posts/${createdPost.id}`);
           removeItem(postLocalSaveKey);
@@ -62,17 +62,20 @@ export default function PostEditPage({ $target, initialState }) {
   });
 
   this.setState = async (nextState) => {
-    console.log(this.state.postId, nextState.postId);
+    console.log(this.state, this.state.postId, nextState.postId);
     if (this.state.postId !== nextState.postId) {
+      // setState <-> fetchPost에서 서로 호출하기때문에 무한루프에 걸리지 않으려면 처리해야함.
       postLocalSaveKey = `temp-post"-${nextState.postId}`;
 
       this.state = nextState; //원래는 이렇게만이어서 New POST 버튼으로 /new오면 아무것도 안뜸! ㅠㅠ
       // 해결
       if (this.state.postId === "new") {
+        //이전엔new였다가 새로운페이지온경우, 즉, new였다가 입력해서 새로운id받아서 url 바뀐상황
         const post = getItem(postLocalSaveKey, {
           title: "",
           content: "",
         });
+        console.log(post);
         this.render(); // this.state만 넣어주고 정작 이 PostEditPage가 렌더가 안됬었던 문제임.
         editor.setState(post);
       } else {
@@ -81,6 +84,7 @@ export default function PostEditPage({ $target, initialState }) {
       return;
     }
     this.state = nextState; // 렌더전에!
+    console.log(this.state);
     this.render();
 
     editor.setState(
