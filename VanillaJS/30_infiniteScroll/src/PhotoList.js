@@ -37,10 +37,10 @@ export default function PhotoList({ $target, initialState, onScrollEnded }) {
   this.render();
 
   window.addEventListener("scroll", () => {
-    const { isLoading, totalCount, photos } = this.state;
+    const { isLoading, photos, isLast } = this.state;
     const isScollEnded =
       window.innerHeight + window.scrollY + 100 >= document.body.offsetHeight;
-    if (isScollEnded && !isLoading && photos.length < totalCount) {
+    if (isScollEnded && !isLoading && !isLast) {
       onScrollEnded();
     }
   });
