@@ -25,7 +25,7 @@ export default function Nodes({ $target, initialState, onClick }) {
       ${nodes
         .map(
           (node) => `
-          <div class="Node">
+          <div class="Node" data-id="${node.id}">
             <img src="${
               node.type === "DIRECTORY"
                 ? "https://cdn.roto.codes/images/directory.png"
@@ -39,4 +39,20 @@ export default function Nodes({ $target, initialState, onClick }) {
     `;
   };
   this.render();
+
+  $nodes.addEventListener("click", (e) => {
+    const $node = e.target.closest(".Node");
+    const { id } = $node.dataset;
+    if (!id) {
+      //id가 없는 경우 === 뒤로가기 ㅋ ㅡㄹ릭
+    } else {
+      const node = this.state.nodes.find((node) => node.id === id);
+      if (node) {
+        onClick(node);
+      } else {
+        //방어
+        alert("올바르지 않은 Node입니다.");
+      }
+    }
+  });
 }
