@@ -1,4 +1,4 @@
-export default function Nodes({ $target, initialState, onClick }) {
+export default function Nodes({ $target, initialState, onClick, onPrevClick }) {
   const $nodes = document.createElement("div");
   $nodes.classList.add("nodes");
   $target.appendChild($nodes);
@@ -44,6 +44,7 @@ export default function Nodes({ $target, initialState, onClick }) {
     const $node = e.target.closest(".Node");
     const { id } = $node.dataset;
     if (!id) {
+      onPrevClick();
       //id가 없는 경우 === 뒤로가기 ㅋ ㅡㄹ릭
     } else {
       const node = this.state.nodes.find((node) => node.id === id);
