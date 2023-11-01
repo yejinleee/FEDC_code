@@ -2,6 +2,7 @@ import Header from "./Header.js";
 import SuggestKeywords from "./SuggestKeywords.js";
 import { requet } from "./api.js";
 import SearchResults from "./SearchResults.js";
+import debounce from "./debounce.js";
 
 export default function App({ $target }) {
   this.state = {
@@ -28,7 +29,7 @@ export default function App({ $target }) {
     initialState: {
       keyword: this.state.keyword,
     },
-    onKeywordInput: async (keyword) => {
+    onKeywordInput: debounce(async (keyword) => {
       if (keyword.trim().length > 1) {
         const keywords = await requet(`/keywords?q=${keyword}`);
         // suggestKeywords.setState(keywords); //컴포넌트에 setState를 할게아니라 전역의 state를 바꿔야지..
@@ -38,7 +39,7 @@ export default function App({ $target }) {
           keywords,
         });
       }
-    },
+    }, 300),
     onEnter: () => {
       fetchCatsImage();
     },
