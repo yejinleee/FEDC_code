@@ -11,7 +11,6 @@ export default function SuggestKeywords({
 
   this.setState = (nextState) => {
     this.state = { ...this.state, ...nextState };
-    console.log(this.state.cursor);
     this.render();
   };
 
@@ -59,10 +58,10 @@ export default function SuggestKeywords({
         });
       } else if (key === "Enter") {
         // 엔터
-        onKeywordSelect(this.state.keywords[this.state.cursor]);
+        if (this.state.cursor > -1) {
+          onKeywordSelect(this.state.keywords[this.state.cursor]);
+        }
       }
-
-      // 커서 왼쪽,오른쪽 이동
     }
   });
 }
