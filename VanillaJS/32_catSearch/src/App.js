@@ -3,6 +3,7 @@ import SuggestKeywords from "./SuggestKeywords.js";
 import { requet } from "./api.js";
 import SearchResults from "./SearchResults.js";
 import debounce from "./debounce.js";
+import { getSessionItem, setSessionItem } from "./storage.js";
 
 export default function App({ $target }) {
   this.state = {
@@ -10,6 +11,7 @@ export default function App({ $target }) {
     keywords: [],
     catImages: [], //null인거랑 []은 다르다.
   };
+  this.cache = getSessionItem("keywords_cache", {});
 
   this.setState = (nextState) => {
     this.state = nextState;
@@ -31,7 +33,15 @@ export default function App({ $target }) {
     },
     onKeywordInput: debounce(async (keyword) => {
       if (keyword.trim().length > 1) {
-        const keywords = await requet(`/keywords?q=${keyword}`);
+        let keywords = null;
+        if (this.cache[keyword]) {
+          keywords = this.cache[keyword];
+        } else {
+          keywords = await requet(`/keywords?q=${keyword}`);
+          this.cache[keyword] = keywords;
+          setSessionItem("keywords_cache", this.cache);
+        }
+
         // suggestKeywords.setState(keywords); //컴포넌트에 setState를 할게아니라 전역의 state를 바꿔야지..
         this.setState({
           ...this.state,
