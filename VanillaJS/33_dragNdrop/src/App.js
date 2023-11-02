@@ -12,12 +12,29 @@ export default function App({ $target }) {
       title: "완료되지 않은 일들",
       todos: [],
     },
+    onDrop: async (todoId) => {
+      console.log("com->incom 이동", todoId);
+
+      await request(`/${todoId}/toggle`, {
+        method: "PUT",
+      });
+
+      await fetchTodos();
+    },
   });
   const completedTodoList = new TodoList({
     $target,
     initialState: {
       title: "완료한 일들",
       todos: [],
+    },
+    onDrop: async (todoId) => {
+      console.log("incom->com 이동", todoId);
+      await request(`/${todoId}/toggle`, {
+        method: "PUT",
+      });
+
+      await fetchTodos();
     },
   });
 
