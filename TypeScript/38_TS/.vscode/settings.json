@@ -1,0 +1,6 @@
+{
+  "[typescript]": {
+    "editor.formatOnSave": true, // 저장할떄마다 포맷팅
+    "editor.defaultFormatter": "esbenp.prettier-vscode" // 기본 포맷터로 프리티어 사용
+  }
+}
