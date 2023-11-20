@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proxy</title>
+  </head>
+  <body>
+    <script>
+      const app = {
+        data: {
+          count: 0,
+        },
+      };
+
+      const proxyA = new Proxy(app.data, {
+        get(target, key) {
+          return target[key];
+        },
+        set(target, key, value) {
+          target[key] = value; // 값 갱신!
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+  </head>
+  <body>
+    <div id="app">
+      <ul>
+        <fruit-item
+          v-for="fruit in fruits"
+          v-bind:fruit-name="fruit"
+        ></fruit-item>
+      </ul>
+    </div>
+    <script>
+      const FruitItem = {
+        template: "<li>{{ fruitName}} </li>",
+        props: ["fruitName"],
+      };
+      const App = {
+        components: { FruitItem: FruitItem }, // 속성: 데이터 이름 같으면 생략 가능~
+        // PascalCase로 등록된 컴포넌트 이름을 HTML에서 쓸 땐 그대로 dash-case로만 바꿔 사용하면 된다.
+        // HTML에서 사용할 데이터를 속성처럼 작성하는데, 여기서도 dash-case !!
+        data() {
+          return {
+            fruits: ["Apple", "Banana", "Cherry"],
+          };
+        },
+      };
+      const app = Vue.createApp(App).mount("#app");
+    </script>
+  </body>
+</html>
