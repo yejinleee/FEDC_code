@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@next"></script>
+    // CDN
+  </head>
+  <body>
+    <div id="app">{{counter}}</div>
+    <script>
+      const App = {
+        // Vue의 옵션을 객체로 설정. 객체의 멤버처럼 선언  <<-옵션API
+        data() {
+          console.log(this);
+          return {
+            counter: 0,
+          };
+        },
+      };
+      const app = Vue.createApp(App).mount("#app"); // Vue.createApp({}).mount(””)
+    </script>
+  </body>
+</html>
