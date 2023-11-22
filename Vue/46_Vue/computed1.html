@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Computed</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <ul>
+        <li v-for="todo in upperTodos">{{todo.title}}</li>
+      </ul>
+    </div>
+    <script>
+      const App = {
+        data() {
+          return {
+            todos: [],
+          };
+        },
+        created() {
+          // 이건 라이프사이클! HTML 연결 전 상태!
+          fetch("https://jsonplaceholder.typicode.com/todos").then((res) =>
+            res.json().then((result) => {
+              console.log(result);
+              this.todos = result; // then에서 화살표함수를 사용해야 App을 가리키는 this를 사용할 수 있음
+            })
+          );
+        },
+        computed: {
+          upperTodos() {
+            // return this.todos.map((todo) => { // map함수 인자의 콜백함수에 화살표함수 쓰는데 화살표함수 내에서 return 반환만 있으니까 화살표함수으 축약형을 사용할 수 있다!
+            //   return {
+            //     ...todo,
+            //     title: todo.title.toUpperCase(),
+            //   };
+            // });
+            return this.todos.map((todo) => ({
+              ...todo,
+              title: todo.title.toUpperCase(),
+            }));
+          },
+        },
+        methods: {},
+      };
+      const vm = Vue.createApp(App).mount("#app");
+    </script>
+  </body>
+</html>

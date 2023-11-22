@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>watch2</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>{{user.age}}</h1>
+      <button @click="capitalize">CAPITALIZE</button>
+      <ul>
+        <li v-for="fruit in fruits">{{fruit.name}}</li>
+      </ul>
+    </div>
+    <script>
+      const App = {
+        data() {
+          return {
+            user: {
+              name: "leon",
+              age: 22,
+            },
+            fruits: [
+              { id: 1, name: "apple" },
+              { id: 2, name: "banana" },
+            ],
+          };
+        },
+        computed: {},
+        watch: {
+          user: {
+            handler(newV, oldV) {
+              console.log(newV, oldV);
+            },
+            deep: true,
+          },
+          fruits: {
+            handler() {
+              console.log(this.fruits);
+            },
+            deep: true,
+            immediate: true,
+          },
+        },
+        methods: {
+          capitalize() {
+            this.fruits.forEach((fruit) => {
+              fruit.name = fruit.name.toUpperCase();
+            });
+          },
+        },
+      };
+      const vm = Vue.createApp(App).mount("#app");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>class 속성 제어</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1 :style="[styleObject, titleStyleObject]">Hello Vue</h1>
+    </div>
+    <!-- 스타일에서 속성이름에 -가 들어가면 이를 '' 로 묶어줘야한다.  'background-color' : backgroundColor
+    하지만 이렇게 dash-case 말고도 camelCase도 지원한다-->
+    <script>
+      const App = {
+        data() {
+          return {
+            styleObject: {
+              color: "cornsilk",
+              backgroundColor: "royalblue",
+            },
+            titleStyleObject: {
+              fontSize: "50px",
+              fontWeight: "bold",
+            },
+          };
+        },
+        computed: {},
+        methods: {},
+      };
+      const vm = Vue.createApp(App).mount("#app");
+    </script>
+  </body>
+</html>

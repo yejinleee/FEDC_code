@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Computed3 + watch</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>{{fullName}}</h1>
+      <h2>{{firstName}}</h2>
+      <h2>{{lastName}}</h2>
+    </div>
+    <script>
+      const App = {
+        data() {
+          return {
+            firstName: "leon", // 반응형 데이터
+            lastName: "miller",
+          };
+        },
+        computed: {
+          fullName: {
+            get() {
+              return `${this.firstName} ${this.lastName}`;
+            },
+            set(newValue) {
+              const names = newValue.split(" ");
+              this.firstName = names[0];
+              this.lastName = names[names.length - 1];
+            },
+          },
+        },
+        watch: {
+          firstName(newValue, oldValue) {
+            console.log("watch firstname", this.firstName);
+          },
+          fullName() {
+            // 위 반응형 데이터 이름으로 선언
+            console.log("watch fullName", this.fullName);
+          },
+        },
+      };
+      const vm = Vue.createApp(App).mount("#app");
+    </script>
+  </body>
+</html>

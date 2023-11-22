@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Computed2</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1>{{user.name}}</h1>
+      <h2>{{user.age}}</h2>
+      <h2>{{doubleAge}}</h2>
+      <h2>{{upperName}}</h2>
+    </div>
+    <script>
+      const App = {
+        data() {
+          return {
+            user: {
+              name: "toto",
+              age: 22,
+              email: "Asdf@ac.com",
+            },
+          };
+        },
+        computed: {
+          doubleAge() {
+            // user.age 변경시 해당 계산도 다시 일어난다. user.age에 의존해있음을 알 수 있다.
+            // use.name 등에는 의존하지 않는다!!!!
+            return this.user.age * 2;
+          },
+          upperName() {
+            // 마찬가지로 this.user.name에만 의존되어 있음
+            return this.user.name.toUpperCase();
+          },
+        },
+      };
+      const vm = Vue.createApp(App).mount("#app");
+    </script>
+  </body>
+</html>

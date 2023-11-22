@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>class 속성 제어</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <style>
+      .title {
+        font-size: 50px;
+        color: blue;
+      }
+      .active {
+        color: red;
+      }
+      .title--small {
+        font-size: 30px;
+      }
+      .color--orange {
+        color: orange;
+      }
+    </style>
+    <div id="app">
+      <button @click="toggle">Toggle</button>
+      <h1 :class="classObject" class="title">{{msg}}</h1>
+    </div>
+    <script>
+      const App = {
+        data() {
+          return {
+            msg: "Hello Vue",
+            active: false,
+            small: true,
+            // classObject: {
+            //   active: this.active,
+            //   "title--small color--orange ": this.small,
+            // },
+          };
+        },
+        computed: {
+          classObject() {
+            return {
+              active: this.active,
+              "title--small color--orange ": this.small,
+            };
+          },
+        },
+        methods: {
+          toggle() {
+            // this.classObject.active = !this.classObject.active; // 나
+            this.active = !this.active;
+          },
+        },
+      };
+      const vm = Vue.createApp(App).mount("#app");
+    </script>
+  </body>
+</html>
