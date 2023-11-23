@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>컴포넌트</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <upper-name
+        v-for="fruit in fruits"
+        :key="fruit.id"
+        :name="fruit.name"
+        @to-upper="toUpper(fruit, $event)"
+      ></upper-name>
+    </div>
+    <script>
+      const App = {
+        data() {
+          return {
+            fruits: [
+              { id: 1, name: "apple" },
+              { id: 2, name: "banana" },
+              { id: 3, name: "cherry" },
+            ],
+          };
+        },
+        methods: {
+          toUpper(fruit, upperName) {
+            // @to-upper="toUpper" 인 경우엔  emit에서 두번째 인자의 결과가 인자로 들어온다 !!
+            // @to-upper="toUpper(fruit)" 처럼 인자를 지정하면 해당 객체가 된다.
+            // 이때 ()없었을 때 처럼 emit의 두번째 인자인 받은 데이터를 확인하려면 $event 사용하면 된다!
+            // $event는 발생한 이벤트 정보를 담는데, 이렇게 커스텀이벤트의 경우에선, 같이 담겨온 데이터를 의미한다.
+            console.log(fruit, upperName);
+            fruit.name = upperName;
+          },
+        },
+      };
+      const app = Vue.createApp(App); // 어플리케이션 생성
+      app.component("upper-name", {
+        template: `
+          <div @click="capitalize">{{name}}</div>
+        `,
+        props: ["name"], // vue의 반응형 데이터를 프롭스(인자)로 받는것.
+        methods: {
+          capitalize() {
+            // this.name = this.name.toUpperCase(); //프롭스로 받은 name은 기본 Readonly 여서 수정 불가능
+            this.$emit("to-upper", this.name.toUpperCase()); // 커스텀 이벤트를 만들어 발생을 올려줘야한다.
+          },
+        },
+      }); // 컴포넌트 전역으로 등록. dash-case로 등록!
+      const vm = app.mount("#app"); // HTML 연결해서 인스턴스 생성
+    </script>
+  </body>
+</html>
