@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>조건부 렌더링</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <form @submit="addNewTodo">
+        <label for="new-todo">Add a Todo</label>
+        <input
+          v-model="newTodoText"
+          id="new-todo"
+          type="text"
+          placeholder="feed the cat"
+        />
+        <button>Add</button>
+      </form>
+      <ul>
+        <!-- <li v-for="todo in todos" :key="todo.id">
+          // key꼭! {{ todo.title}}
+          <button @click="removeTodo(todo.id)">Remove</button>
+        </li> -->
+        <!-- 이 li 부분을 컴포넌트화 할 수 있다. 기능 독립시키고 재사용성높이고 중요기능 캡슐화 가능해짐 -->
+        <!-- 자세한건 컴포넌트 파트에서  -->
+        <todo-item
+          v-for="todo in todos"
+          :key="todo.id"
+          :todo="todo"
+          @remove="removeTodo"
+        />
+        //여기서 emit 지정 // @이벤트명 = 발생할 메소드
+      </ul>
+    </div>
+    <script>
+      function generateId() {
+        return `${Date.now()}${Math.random()}`;
+      }
+      const TodoItem = {
+        // 반복 출력에 컴포넌트로 쓰려는거니까 li에서 v-for 부분 필요없어짐
+        template: `
+        <li>
+           {{ todo.title}}
+          <button @click="$emit('remove', todo.id)">Remove</button>
+        </li>`,
+        props: ["todo"], //컴포넌트 바깥에서부터 받아와서 쓸 데이터 명시해줘야함 !!
+      };
+      // removeTodo의 경우 App컴포넌트에 정의되어 있고, TodoItem 단위엔 없으니까!
+      // 이때 emit 사용
+      // 기존:      <button @click="removeTodo(todo.id)">Remove</button>
+      // $emit('일종의 커스텀이벤트명' , 같이보낼 데이터)
+
+      const App = {
+        components: {
+          TodoItem,
+        },
+        data() {
+          return {
+            newTodoText: "",
+            todos: [],
+          };
+        },
+        computed: {},
+        methods: {
+          addNewTodo(e) {
+            e.preventDefault(); // JS에서와 같음
+            this.todos.push({
+              id: generateId(),
+              title: this.newTodoText,
+            });
+            this.newTodoText = ""; //초기화
+            console.log(this.todos);
+          },
+          removeTodo(todoId) {
+            //이렇게 다시 할당해줘야함! 완전 재할당 아니고 최적화 있음
+            this.todos = this.todos.filter((todo) => {
+              return todo.id !== todoId;
+            });
+          },
+        },
+      };
+      const vm = Vue.createApp(App).mount("#app");
+    </script>
+  </body>
+</html>

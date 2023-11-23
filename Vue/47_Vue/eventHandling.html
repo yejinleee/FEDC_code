@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이벤트 핸들링</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <h1 @click="a(); b(); c()">모두 실행</h1>
+    </div>
+    <script>
+      const App = {
+        data() {
+          return {
+            msg: "VUE",
+          };
+        },
+        computed: {},
+        methods: {
+          a() {
+            console.log("a");
+          },
+          b() {
+            console.log("b");
+          },
+          c() {
+            console.log("c");
+          },
+        },
+      };
+      const vm = Vue.createApp(App).mount("#app");
+    </script>
+  </body>
+</html>

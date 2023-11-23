@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>이벤트 핸들링</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <a @click.prevent href="https://google.com" target="_blank">Google</a>
+    </div>
+    <script>
+      const App = {
+        data() {},
+        computed: {},
+        methods: {},
+      };
+      const vm = Vue.createApp(App).mount("#app");
+    </script>
+  </body>
+</html>
