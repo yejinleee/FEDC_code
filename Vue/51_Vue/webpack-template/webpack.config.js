@@ -34,8 +34,9 @@ module.exports = {
       {
         test: /\.s?css$/,
         use: [
-          "vue-style-loader",
+          "vue-style-loader", //style-loader는 또 안해도 됨!
           "css-loader", // 순서 중요! 아래부터, 오른쪽부터 평가됨. 먼저 해석되어야 하는 로더를 마지막에 작성!!!!
+          "postcss-loader",
           "sass-loader",
         ],
       },
