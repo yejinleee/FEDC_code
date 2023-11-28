@@ -23,6 +23,11 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: "babel-loader",
+      },
+      {
         test: /\.vue$/, // 정규표현식을 통해 .vue 찾음 // 정규표현식.text()로 탐지하는 역할
         use: "vue-loader", // js만 해석할 수 있는 webpack이 vue도 해석할 수 있도록 하는 패키지/ npm i -D vue-loader@next
       },
