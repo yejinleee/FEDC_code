@@ -38,3 +38,40 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+li {
+  .title {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 14px;
+    color: rgba($color-font, 0.7);
+    &:hover {
+      background-color: $color-background--hover1;
+      padding-right: 4px;
+      .actions {
+        display: flex;
+      }
+    }
+    .material-icons {
+      font-size: 18px;
+      color: $color-icon;
+      margin-right: 4px;
+      &hover {
+        background-color: $color-background--hover2;
+      }
+    }
+    .text {
+      flex-grow: 1;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .actions {
+      display: none;
+      align-items: center;
+    }
+  }
+}
+</style>
