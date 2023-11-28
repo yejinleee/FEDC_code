@@ -4,10 +4,27 @@
       <div class="user-profile"></div>
       Leon's Notion
     </div>
-    <ul></ul>
+    <ul>
+      <li v-for="workspace in workspaces" :key="workspace.id">
+        {{ workspace.title }}
+      </li>
+    </ul>
     <div class="actions"></div>
   </nav>
 </template>
+
+<script>
+export default {
+  computed: {
+    workspaces() {
+      return this.$store.state.workspace.workspaces;
+    },
+  },
+  created() {
+    this.$store.dispatch("workspace/readWorkspaces");
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 // @import "~/scss/_variables";

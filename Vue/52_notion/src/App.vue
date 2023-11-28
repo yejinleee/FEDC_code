@@ -21,6 +21,7 @@
 
 <script>
 import LNB from "~/components/LNB";
+
 export default {
   components: {
     LNB,
