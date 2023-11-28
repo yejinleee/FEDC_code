@@ -17,6 +17,7 @@ module.exports = {
     path: path.resolve(__dirname, "dist"), // (경로, 폴더명)
     // __dirname 은 nodejs의 전역변수임. 루트경로에 대한 정보
     // 폴더명은 통상 dist , public 등
+    publicPath: "/",
     clean: true, //dist폴더의 불필요한거 지워버림
   },
   module: {
@@ -50,6 +51,7 @@ module.exports = {
     }),
   ],
   devServer: {
-    // port: 1234//기본 8080
+    //실제서버X, 개발서버옵션
+    historyApiFallback: true,
   },
 };
