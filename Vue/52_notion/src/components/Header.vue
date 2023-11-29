@@ -2,7 +2,7 @@
   <header>
     <div class="titles">
       <template
-        v-for="(workspace, index) in this.$store.state.workspace
+        v-for="(workspace, index) in $store.state.workspace
           .currentWorkspacePath"
         :key="workspace.id"
       >
@@ -28,7 +28,9 @@
     </div>
   </header>
 </template>
-
+<script>
+export default {};
+</script>
 <style lang="scss" scoped>
 header {
   height: 45px;
