@@ -6,6 +6,7 @@ export default {
     return {
       workspaces: [],
       currentWorkspace: {},
+      currentWorkspacePath: [],
     };
   },
   getters: {},
@@ -41,6 +42,7 @@ export default {
         method: "GET",
       });
       commit("assignState", { workspaces });
+      dispatch("findWorkspacePath");
       if (workspaces.length === 0) {
         dispatch("createWorkspace");
       }
@@ -87,6 +89,27 @@ export default {
           },
         });
       }
+    },
+    findWorkspacePath({ state, commit }) {
+      // 현재열린페이지까지의 경로를 저장해둠
+      const currentWorkspaceId = parseInt(
+        router.currentRoute.value.params.id,
+        10
+      );
+      function _find(workspace, parents) {
+        if (currentWorkspaceId === workspace.id) {
+          commit("assignState", {
+            currentWorkspacePath: [...parents, workspace],
+          });
+        }
+        if (workspace.documents) {
+          // 재귀로 호출
+          workspace.documents.forEach((ws) =>
+            _find(ws, [...parents, workspace])
+          );
+        }
+      }
+      state.workspaces.forEach((workspace) => _find(workspace, []));
     },
   },
 };

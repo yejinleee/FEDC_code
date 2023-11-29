@@ -44,13 +44,18 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("workspace/readWorkspaces");
+    // 라이프사이클에선 비동기처리 XX
+    this.workspacesInit();
   },
   mounted() {
     // HTML과 연결 후에 실행해야하니까 mounted
     this.navInit();
   },
   methods: {
+    async workspacesInit() {
+      await this.$store.dispatch("workspace/readWorkspaces");
+      console.log(this.$store.state.workspace.currentWorkspacePath);
+    },
     navInit() {
       interact(this.$refs.nav)
         .resizable({
