@@ -20,20 +20,13 @@ export default {
     async createWorkspace({ dispatch }, payload = {}) {
       // 최상의 목록은 parentId가 없기 때문에 undefined가 넘어온다. 이때 디폴트로 {}처리
       const { parentId } = payload;
-      const workspace = await fetch(
-        "https://kdt-frontend.programmers.co.kr/documents",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-username": "yejin",
-          },
-          body: JSON.stringify({
-            title: "",
-            parent: parentId,
-          }),
-        }
-      ).then((res) => res.json());
+      const workspace = await _request({
+        method: "POST",
+        body: JSON.stringify({
+          title: "",
+          parent: parentId,
+        }),
+      });
       await dispatch("readWorkspaces");
       router.push({
         name: "Workspace",
@@ -44,16 +37,9 @@ export default {
     },
     async readWorkspaces({ commit, dispatch }) {
       //전체목록
-      const workspaces = await fetch(
-        "https://kdt-frontend.programmers.co.kr/documents",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-username": "yejin",
-          },
-        }
-      ).then((res) => res.json());
+      const workspaces = await _request({
+        method: "GET",
+      });
       commit("assignState", { workspaces });
       if (workspaces.length === 0) {
         dispatch("createWorkspace");
@@ -63,17 +49,10 @@ export default {
       //개별
       const { id } = payload;
       try {
-        const workspace = await fetch(
-          `https://kdt-frontend.programmers.co.kr/documents/${id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "x-username": "yejin",
-            },
-          }
-        ).then((res) => res.json());
-        console.log(workspace);
+        const workspace = await _request({
+          id,
+          method: "GET",
+        });
         commit("assignState", {
           currentWorkspace: workspace,
         });
@@ -83,28 +62,22 @@ export default {
     },
     async updateWorkspace({ dispatch }, payload) {
       const { id, title, content } = payload;
-      await fetch(`https://kdt-frontend.programmers.co.kr/documents/${id}`, {
+      await _request({
+        id,
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "x-username": "yejin",
-        },
         body: JSON.stringify({
           title,
           content,
         }),
-      }).then((res) => res.json());
+      });
       dispatch("readWorkspaces");
     },
     async deleteWorkspace({ state, dispatch }, payload) {
       const { id } = payload;
-      await fetch(`https://kdt-frontend.programmers.co.kr/documents/${id}`, {
+      await _request({
+        id,
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "x-username": "yejin",
-        },
-      }).then((res) => res.json());
+      });
       await dispatch("readWorkspaces");
       if (id === parseInt(router.currentRoute.value.params.id, 10)) {
         router.push({
@@ -117,3 +90,16 @@ export default {
     },
   },
 };
+
+// function은 호이스팅에 의해 맨 위에서 선언됨
+// 실제로도 맨 위에 해도 되긴 하지만, 다른 중요한게 밀리게 되니까..
+async function _request(options) {
+  const { id = "" } = options; //undefined인경우 방어를 위한 ''
+  return await fetch(`https://kdt-frontend.programmers.co.kr/documents/${id}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      "x-username": "yejin",
+    },
+  }).then((res) => res.json());
+}
