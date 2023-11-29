@@ -1,5 +1,5 @@
 <template>
-  <section :key="$route.param.id">
+  <section :key="$route.params.id">
     <div class="inner">
       <div
         class="title"
