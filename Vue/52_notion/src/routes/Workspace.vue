@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section :key="$route.param.id">
     <div class="inner">
       <div
         class="title"
@@ -32,11 +32,19 @@ export default {
       return this.$store.state.workspace.currentWorkspace.content;
     },
   },
+  watch: {
+    $route() {
+      this.$store.dispatch("workspace/readWorkspace", {
+        id: this.$route.params.id,
+      });
+    },
+  },
   created() {
     this.$store.dispatch("workspace/readWorkspace", {
       id: this.$route.params.id,
     });
   },
+
   methods: {
     onInput() {
       if (!this.$refs.content.textContent.trim()) {
