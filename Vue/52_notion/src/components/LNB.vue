@@ -1,5 +1,5 @@
 <template>
-  <nav>
+  <nav ref="nav" :style="{ width: `${navWidth}px` }">
     <div class="header">
       <div class="user-profile"></div>
       Leon's Notion
@@ -16,16 +16,27 @@
         <span class="material-icons">add</span>새로운 페이지
       </div>
     </div>
+    <div
+      ref="resizeHandle"
+      class="resize-handle"
+      @dblclick="navWidth = 240"
+    ></div>
   </nav>
 </template>
 
 <script>
+import interact from "interactjs";
 import WorkspaceItem from "~/components/WorkspaceItem";
 
 export default {
   components: {
     WorkspaceItem,
     WorkspaceItem,
+  },
+  data() {
+    return {
+      navWidth: 240,
+    };
   },
   computed: {
     workspaces() {
@@ -35,6 +46,23 @@ export default {
   created() {
     this.$store.dispatch("workspace/readWorkspaces");
   },
+  mounted() {
+    // HTML과 연결 후에 실행해야하니까 mounted
+    this.navInit();
+  },
+  methods: {
+    navInit() {
+      interact(this.$refs.nav)
+        .resizable({
+          edges: {
+            right: this.$refs.resizeHandle, // true로 줄수있는데, 그럼 꼭 경계선 아니어도 작동이되는 이슈! 그래서 확실히 명시
+          },
+        })
+        .on("resizemove", (e) => {
+          this.navWidth = e.rect.width;
+        });
+    },
+  },
 };
 </script>
 
@@ -42,11 +70,14 @@ export default {
 // @import "~/scss/_variables";
 // @use "sass:color";
 nav {
-  width: 240px;
+  max-width: 500px;
+  min-width: 160px;
   height: 100%;
   background-color: $color-background;
   display: flex;
+  flex-shrink: 0;
   flex-direction: column;
+  position: relative;
   .header {
     padding: 14px;
     font-weight: 700;
@@ -81,6 +112,18 @@ nav {
         margin-right: 4px;
         color: $color-icon;
       }
+    }
+  }
+  .resize-handle {
+    width: 4px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: col-resize;
+    transition: 0.4s;
+    &:hover {
+      background-color: $color-border;
     }
   }
 }
