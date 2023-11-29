@@ -1,3 +1,5 @@
+import router from "~/routes";
+
 export default {
   namespaced: true,
   state() {
@@ -18,18 +20,27 @@ export default {
     async createWorkspace({ dispatch }, payload = {}) {
       // 최상의 목록은 parentId가 없기 때문에 undefined가 넘어온다. 이때 디폴트로 {}처리
       const { parentId } = payload;
-      await fetch("https://kdt-frontend.programmers.co.kr/documents", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-username": "yejin",
-        },
-        body: JSON.stringify({
-          title: "",
-          parent: parentId,
-        }),
-      }).then((res) => res.json());
+      const workspace = await fetch(
+        "https://kdt-frontend.programmers.co.kr/documents",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-username": "yejin",
+          },
+          body: JSON.stringify({
+            title: "",
+            parent: parentId,
+          }),
+        }
+      ).then((res) => res.json());
       await dispatch("readWorkspaces");
+      router.push({
+        name: "Workspace",
+        params: {
+          id: workspace.id,
+        },
+      });
     },
     async readWorkspaces({ commit }) {
       //전체목록
@@ -79,7 +90,7 @@ export default {
       }).then((res) => res.json());
       dispatch("readWorkspaces");
     },
-    async deleteWorkspace({ dispatch }, payload) {
+    async deleteWorkspace({ state, dispatch }, payload) {
       const { id } = payload;
       await fetch(`https://kdt-frontend.programmers.co.kr/documents/${id}`, {
         method: "DELETE",
@@ -88,7 +99,15 @@ export default {
           "x-username": "yejin",
         },
       }).then((res) => res.json());
-      dispatch("/Workspaces");
+      await dispatch("readWorkspaces");
+      if (id === parseInt(router.currentRoute.value.params.id, 10)) {
+        router.push({
+          name: "Workspace",
+          params: {
+            id: state.workspaces[0].id, // context를 구조분해해서 가져온 state임!
+          },
+        });
+      }
     },
   },
 };

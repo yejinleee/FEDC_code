@@ -1,6 +1,10 @@
 <template>
   <li>
-    <div :style="{ paddingLeft: `${14 * depth}px` }" class="title">
+    <div
+      :style="{ paddingLeft: `${14 * depth}px` }"
+      :class="{ active: parseInt($route.params.id, 10) === workspace.id }"
+      class="title"
+    >
       <span
         :class="{ active: showChildren }"
         class="material-icons"
@@ -98,6 +102,12 @@ li {
     height: 30px;
     padding: 0 14px;
     color: rgba($color-font, 0.7);
+    &.active {
+      .text {
+        font-weight: 700;
+        color: rgba($color-font, 0.8);
+      }
+    }
     &:hover {
       background-color: $color-background--hover1;
       padding-right: 4px;
