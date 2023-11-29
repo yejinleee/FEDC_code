@@ -64,7 +64,7 @@ export default {
         currentWorkspace: workspace,
       });
     },
-    async updateWorkspace(context, payload) {
+    async updateWorkspace({ dispatch }, payload) {
       const { id, title, content } = payload;
       await fetch(`https://kdt-frontend.programmers.co.kr/documents/${id}`, {
         method: "PUT",
@@ -77,6 +77,7 @@ export default {
           content,
         }),
       }).then((res) => res.json());
+      dispatch("readWorkspaces");
     },
     async deleteWorkspace({ dispatch }, payload) {
       const { id } = payload;
