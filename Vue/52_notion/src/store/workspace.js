@@ -3,6 +3,7 @@ export default {
   state() {
     return {
       workspaces: [],
+      currentWorkspace: {},
     };
   },
   getters: {},
@@ -31,6 +32,7 @@ export default {
       await dispatch("readWorkspaces");
     },
     async readWorkspaces({ commit }) {
+      //전체목록
       const workspaces = await fetch(
         "https://kdt-frontend.programmers.co.kr/documents",
         {
@@ -44,7 +46,38 @@ export default {
       commit("assignState", { workspaces });
       console.log(workspaces);
     },
-    updateWorkspace() {},
+    async readWorkspace({ commit }, payload) {
+      //개별
+      const { id } = payload;
+      const workspace = await fetch(
+        `https://kdt-frontend.programmers.co.kr/documents/${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-username": "yejin",
+          },
+        }
+      ).then((res) => res.json());
+      console.log(workspace);
+      commit("assignState", {
+        currentWorkspace: workspace,
+      });
+    },
+    async updateWorkspace(context, payload) {
+      const { id, title, content } = payload;
+      await fetch(`https://kdt-frontend.programmers.co.kr/documents/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-username": "yejin",
+        },
+        body: JSON.stringify({
+          title,
+          content,
+        }),
+      }).then((res) => res.json());
+    },
     async deleteWorkspace({ dispatch }, payload) {
       const { id } = payload;
       await fetch(`https://kdt-frontend.programmers.co.kr/documents/${id}`, {
@@ -54,7 +87,7 @@ export default {
           "x-username": "yejin",
         },
       }).then((res) => res.json());
-      dispatch("readWorkspaces");
+      dispatch("/Workspaces");
     },
   },
 };

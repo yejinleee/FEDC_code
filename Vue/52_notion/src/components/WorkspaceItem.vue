@@ -8,7 +8,18 @@
       >
         play_arrow
       </span>
-      <span class="text">{{ workspace.title || "제목 없음" }}</span>
+      <span
+        class="text"
+        @click="
+          $router.push({
+            name: 'Workspace',
+            params: {
+              id: workspace.id,
+            },
+          })
+        "
+        >{{ workspace.title || "제목 없음" }}</span
+      >
       <div class="actions">
         <span class="material-icons" @click="createWorkspace"> add </span>
         <span class="material-icons" @click="deleteWorkspace"> delete </span>
