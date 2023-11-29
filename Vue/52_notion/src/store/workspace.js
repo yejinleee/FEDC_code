@@ -42,7 +42,7 @@ export default {
         },
       });
     },
-    async readWorkspaces({ commit }) {
+    async readWorkspaces({ commit, dispatch }) {
       //전체목록
       const workspaces = await fetch(
         "https://kdt-frontend.programmers.co.kr/documents",
@@ -55,25 +55,31 @@ export default {
         }
       ).then((res) => res.json());
       commit("assignState", { workspaces });
-      console.log(workspaces);
+      if (workspaces.length === 0) {
+        dispatch("createWorkspace");
+      }
     },
     async readWorkspace({ commit }, payload) {
       //개별
       const { id } = payload;
-      const workspace = await fetch(
-        `https://kdt-frontend.programmers.co.kr/documents/${id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-username": "yejin",
-          },
-        }
-      ).then((res) => res.json());
-      console.log(workspace);
-      commit("assignState", {
-        currentWorkspace: workspace,
-      });
+      try {
+        const workspace = await fetch(
+          `https://kdt-frontend.programmers.co.kr/documents/${id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "x-username": "yejin",
+            },
+          }
+        ).then((res) => res.json());
+        console.log(workspace);
+        commit("assignState", {
+          currentWorkspace: workspace,
+        });
+      } catch (error) {
+        router.push("/error");
+      }
     },
     async updateWorkspace({ dispatch }, payload) {
       const { id, title, content } = payload;

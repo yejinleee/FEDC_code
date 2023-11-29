@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Workspace from "./Workspace";
+import NotFound from "./NotFound";
 
 export default createRouter({
   history: createWebHistory(),
@@ -15,6 +16,10 @@ export default createRouter({
           component: Workspace,
         },
       ],
+    },
+    {
+      path: "/:notFound(.*)", // 위의 '/'경로 제외 모두 해당
+      component: NotFound,
     },
   ],
 });
