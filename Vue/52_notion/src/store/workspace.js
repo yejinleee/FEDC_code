@@ -28,7 +28,7 @@ export default {
           parent: parentId,
         }),
       }).then((res) => res.json());
-      dispatch("readWorkspaces");
+      await dispatch("readWorkspaces");
     },
     async readWorkspaces({ commit }) {
       const workspaces = await fetch(
