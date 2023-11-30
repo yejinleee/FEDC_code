@@ -1,0 +1,23 @@
+// $border-color: #ddd; // 이렇게 쓰면, 컴포넌트에서 @import 로 가져와야함. 매번 하긴 불편! 변수일땐 html 변수활용하기
+
+body {
+  --border-color: #ddd; // 이렇게 최상위에서 html 변수로 두면 모두 접근 가능
+  font-size: 20px;
+  font-weight: 600;
+  font-family:
+    'Pretendard Variable',
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    'Helvetica Neue',
+    'Segoe UI',
+    'Apple SD Gothic Neo',
+    'Noto Sans KR',
+    'Malgun Gothic',
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    sans-serif;
+}
