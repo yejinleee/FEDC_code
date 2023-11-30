@@ -7,20 +7,35 @@ export default defineComponent({
       count: 0,
     };
   },
-  created() {
-    console.log('Created!');
+  computed: {
+    double: {
+      get() {
+        return this.count * 2;
+      },
+      set(newValue: number) {
+        this.count = newValue / 2;
+      },
+    },
   },
-  mounted() {
-    console.log('mounted!');
+  watch: {
+    count(newValue, oldValue) {
+      console.log(newValue, oldValue);
+    },
   },
   methods: {
     increase() {
       this.count += 1;
+    },
+    assign() {
+      this.double = 8;
     },
   },
 });
 </script>
 
 <template>
-  <h1 @click="increase">{{ count }}</h1>
+  <button @click="increase">INCREASE</button>
+  <button @click="assign">assign 8</button>
+  <h1>{{ count }}</h1>
+  <h1>{{ double }}</h1>
 </template>

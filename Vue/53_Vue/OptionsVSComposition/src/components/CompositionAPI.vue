@@ -1,18 +1,30 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'; // mounted는 vue에서 가져와야함
+import { ref, computed, watch } from 'vue'; // mounted는 vue에서 가져와야함
 
 const count = ref(0);
 
-console.log('created'); // script 영역에 적어주는 것만으로도 라이프사이클의 created()순서와 거의 비슷!
-onMounted(() => {
-  console.log('Mounted');
+const double = computed({
+  get() {
+    return count.value * 2;
+  },
+  set(newValue: number) {
+    count.value = newValue / 2;
+  },
 });
-
+watch(count, (newValue, oldValue) => {
+  console.log(newValue, oldValue);
+});
 function increase() {
   count.value += 1;
+}
+function assign() {
+  double.value = 8;
 }
 </script>
 
 <template>
-  <h1 @click="increase">{{ count }}</h1>
+  <button @click="increase">INCREASE</button>
+  <button @click="assign">assign 8</button>
+  <h1>{{ count }}</h1>
+  <h1>{{ double }}</h1>
 </template>
