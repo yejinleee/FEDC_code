@@ -1,10 +1,21 @@
+import axios from 'axios';
 import { defineStore } from 'pinia';
 
+interface CreateTodoPayload {
+  title: string;
+}
+
 export const useTodosStore = defineStore('todos', {
-  // 이게 state() { } 도 되는거여싼 ?
   state: () => ({}),
   getters: {},
   actions: {
-    createTodo() {},
+    async createTodo({ title }: CreateTodoPayload) {
+      await axios.post('/api/todos', {
+        method: 'POST',
+        data: {
+          title,
+        },
+      });
+    },
   },
 });

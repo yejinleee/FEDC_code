@@ -1,11 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useTodosStore } from '~/store/todos';
 import TheIcon from '~/components/TheIcon.vue';
 
+const todosStore = useTodosStore();
 const title = ref('');
 
-function createTodo() {
-  console.log('S');
+async function createTodo(event: MouseEvent | KeyboardEvent) {
+  if (event instanceof KeyboardEvent && event.isComposing) return; // 키보드 입력된 한글을 구조화중일땐 동작 안하도록
+  if (!title.value.trim()) return;
+  try {
+    await todosStore.createTodo({
+      title: title.value,
+    });
+    title.value = '';
+  } catch (err) {
+    console.error('TodoCreator/createTodo', err);
+  }
 }
 </script>
 
