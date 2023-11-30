@@ -1,30 +1,42 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'; // mounted는 vue에서 가져와야함
+import { useAttrs } from 'vue';
+const attrs = useAttrs();
 
-const count = ref(0);
+defineOptions({
+  inheritAttrs: false,
+});
+const props = withDefaults(
+  defineProps<{
+    modelValue: string;
+    name?: string;
+    active?: boolean;
+  }>(),
+  {
+    name: '',
+    active: false,
+  },
+);
+const emit = defineEmits(['update:modelValue']);
 
-const double = computed({
-  get() {
-    return count.value * 2;
-  },
-  set(newValue: number) {
-    count.value = newValue / 2;
-  },
-});
-watch(count, (newValue, oldValue) => {
-  console.log(newValue, oldValue);
-});
-function increase() {
-  count.value += 1;
-}
-function assign() {
-  double.value = 8;
-}
+console.log(props.name, props.active);
+console.log(attrs);
+function inputHandler(event: Event) {
+  emit('update:modelValue', (event.target as HTMLInputElement).value);
+} // this로 접근 XX defineEmits 반환 결과로 emit을 받아야함
 </script>
 
 <template>
-  <button @click="increase">INCREASE</button>
-  <button @click="assign">assign 8</button>
-  <h1>{{ count }}</h1>
-  <h1>{{ double }}</h1>
+  <label :class="{ active }">
+    {{ name }}
+    <input
+      v-bind="$attrs"
+      :value="modelValue"
+      @input="inputHandler" />
+  </label>
 </template>
+
+<style scoped>
+.active {
+  color: red;
+}
+</style>

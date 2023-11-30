@@ -1,41 +1,47 @@
 <script lang="ts">
-import { defineComponent } from 'vue'; // TS 설정 위함
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  data() {
-    return {
-      count: 0,
-    };
-  },
-  computed: {
-    double: {
-      get() {
-        return this.count * 2;
-      },
-      set(newValue: number) {
-        this.count = newValue / 2;
-      },
+  inheritAttrs: false,
+  props: {
+    modelValue: {
+      type: String,
+      required: true,
+    },
+    name: {
+      type: String,
+      default: '', // 선택속성이 됨
+    },
+    active: {
+      type: Boolean,
+      default: false,
     },
   },
-  watch: {
-    count(newValue, oldValue) {
-      console.log(newValue, oldValue);
-    },
+  emits: ['update:modelValue'],
+  created() {
+    console.log(this.$props.name, this.$props.active);
+    // props의 경우 this에도 바인딩이 되기 떄문에 중간에 $props 생략해도됨!!ㅇㅁㅇ
   },
   methods: {
-    increase() {
-      this.count += 1;
-    },
-    assign() {
-      this.double = 8;
+    inputHandler(event: Event) {
+      this.$emit('update:modelValue', (event.target as HTMLInputElement).value);
     },
   },
 });
 </script>
 
 <template>
-  <button @click="increase">INCREASE</button>
-  <button @click="assign">assign 8</button>
-  <h1>{{ count }}</h1>
-  <h1>{{ double }}</h1>
+  <label :class="{ active }">
+    {{ name }}
+    <input
+      v-bind="$attrs"
+      :value="modelValue"
+      @input="inputHandler" />
+  </label>
 </template>
+
+<style scoped>
+.active {
+  color: red;
+}
+</style>
