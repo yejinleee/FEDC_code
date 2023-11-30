@@ -1,23 +1,26 @@
-// $border-color: #ddd; // 이렇게 쓰면, 컴포넌트에서 @import 로 가져와야함. 매번 하긴 불편! 변수일땐 html 변수활용하기
+@mixin font {
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Pretendard Variable';
+}
 
 body {
   --border-color: #ddd; // 이렇게 최상위에서 html 변수로 두면 모두 접근 가능
-  font-size: 20px;
-  font-weight: 600;
-  font-family:
-    'Pretendard Variable',
-    Pretendard,
-    -apple-system,
-    BlinkMacSystemFont,
-    system-ui,
-    Roboto,
-    'Helvetica Neue',
-    'Segoe UI',
-    'Apple SD Gothic Neo',
-    'Noto Sans KR',
-    'Malgun Gothic',
-    'Apple Color Emoji',
-    'Segoe UI Emoji',
-    'Segoe UI Symbol',
-    sans-serif;
+  --item-height: 80px;
+
+  background-image: linear-gradient(125deg, royalblue, brown);
+  min-height: 100vh;
+  padding: 70px 20px;
+  box-sizing: border-box;
+  color: #333;
+
+  @include font;
+}
+input {
+  @include font;
+}
+.shadow {
+  box-shadow:
+    4px 4px 14px rgba(#000, 0.1),
+    4px 4px 50px rgba(#000, 0.2);
 }
