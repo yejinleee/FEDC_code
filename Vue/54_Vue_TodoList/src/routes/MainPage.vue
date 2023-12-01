@@ -13,12 +13,23 @@ const todosStore = useTodosStore();
     <TodoList />
     <TheMessage />
   </main>
-  <RouterView v-if="todosStore.todos.length" />
+  <Transition>
+    <RouterView v-if="todosStore.todos.length" />
+  </Transition>
 </template>
 
 <style lang="scss" scoped>
 main {
   max-width: 700px;
   margin: 0 auto;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>
