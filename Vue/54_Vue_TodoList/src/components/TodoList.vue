@@ -13,9 +13,14 @@ const todoListEl = ref<HTMLDivElement | null>(null); // HTML과 연결이후에 
 const debounced = debounce((newValue: boolean) => {
   todosStore.updateCheckboxes(newValue);
 }, 1000);
+
 const isAllChecked = computed({
   get() {
-    return todosStore.todos.every((todo) => todo.done);
+    // todosStore.filteredTodos.length가 0일떄 이를 T/F로 바꾸기 위해 !! 사용
+    return (
+      !!todosStore.filteredTodos.length &&
+      todosStore.filteredTodos.every((todo) => todo.done)
+    );
   },
   set(newValue: boolean) {
     todosStore.todos.forEach((todo) => {
