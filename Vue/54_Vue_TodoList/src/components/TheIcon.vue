@@ -31,7 +31,7 @@ defineProps<{
   &.active {
     background-color: royalblue;
     border: 1px solid royalblue;
-    .maerial-symbols-outlined {
+    .material-symbols-outlined {
       opacity: 1;
       color: #fff;
     }

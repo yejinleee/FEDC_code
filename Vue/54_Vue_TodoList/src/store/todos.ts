@@ -61,5 +61,14 @@ export const useTodosStore = defineStore('todos', {
         Object.assign(foundTodo, backedUpTodo); // 백업해둔걸로 복귀
       }
     },
+    updateCheckboxes(done: boolean) {
+      // 여기선 async X 병렬로 요청
+      this.todos.forEach((todo) => {
+        this.updateTodo({
+          ...todo,
+          done,
+        });
+      });
+    },
   },
 });
