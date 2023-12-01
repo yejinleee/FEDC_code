@@ -1,0 +1,26 @@
+@mixin font {
+  font-size: 20px;
+  font-weight: 600;
+  font-family: 'Pretendard Variable';
+}
+
+body {
+  --border-color: #ddd; // 이렇게 최상위에서 html 변수로 두면 모두 접근 가능
+  --item-height: 80px;
+
+  background-image: linear-gradient(125deg, royalblue, brown);
+  min-height: 100vh;
+  padding: 70px 20px;
+  box-sizing: border-box;
+  color: #333;
+
+  @include font;
+}
+input {
+  @include font;
+}
+.shadow {
+  box-shadow:
+    4px 4px 14px rgba(#000, 0.1),
+    4px 4px 50px rgba(#000, 0.2);
+}
