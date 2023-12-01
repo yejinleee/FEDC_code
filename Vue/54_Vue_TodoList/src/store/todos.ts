@@ -40,18 +40,25 @@ export const useTodosStore = defineStore('todos', {
       }
     },
     async updateTodo(todo: Todo) {
-      const { id, title, done } = todo;
-      const { data: updatedTodo } = await axios.post(`/api/todos`, {
-        method: 'PUT',
-        path: id,
-        data: {
-          title,
-          done,
-        },
-      });
-      const foundTodo = this.todos.find((t) => t.id === todo.id);
-      if (foundTodo) {
-        Object.assign(foundTodo, updatedTodo);
+      const foundTodo = this.todos.find((t) => t.id === todo.id); // 바꿀 todo를 찾고 '로컬'의 데이터를 먼저! 갱신함
+      if (!foundTodo) return;
+      const backedUpTodo = { ...foundTodo };
+      Object.assign(foundTodo, todo);
+
+      try {
+        const { id, title, done } = todo;
+        const { data: updatedTodo } = await axios.post(`/api/todos`, {
+          method: 'PUT',
+          path: id,
+          data: {
+            title,
+            done,
+          },
+        });
+      } catch (err) {
+        console.error('updateTodo', err);
+        // 서버에서 갱신이 실패했을 경우 로컬도 돌려야 하기 때문에 Try-catch
+        Object.assign(foundTodo, backedUpTodo); // 백업해둔걸로 복귀
       }
     },
   },
