@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 import type { Todo } from '~/store/todos';
 import { useTodosStore } from '~/store/todos';
 import TheIcon from '~/components/TheIcon.vue';
@@ -7,7 +8,10 @@ import TheIcon from '~/components/TheIcon.vue';
 const props = defineProps<{
   todo: Todo;
 }>();
+
 const todosStore = useTodosStore();
+const router = useRouter();
+
 const done = computed({
   get() {
     return props.todo.done;
@@ -19,8 +23,15 @@ const done = computed({
     });
   },
 });
+
 function toggleDone() {
   done.value = !done.value;
+}
+function onTodoModal() {
+  todosStore.currentTodo = {
+    ...props.todo,
+  }; // 참조형이기 때문에 객체 통째로 할당하면 안된다.
+  router.push(`/${props.todo.id}`);
 }
 </script>
 <template>
@@ -30,7 +41,11 @@ function toggleDone() {
       @click="toggleDone">
       check
     </TheIcon>
-    <div class="title">{{ todo.title }}</div>
+    <div
+      class="title"
+      @click="onTodoModal">
+      {{ todo.title }}
+    </div>
     <div class="drag-handle">
       <span class="material-symbols-outlined"> drag_indicator </span>
     </div>

@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { useTodosStore } from '~/store/todos';
 import TodoCreator from '~/components/TodoCreator.vue';
 import TodoList from '~/components/TodoList.vue';
+
+const todosStore = useTodosStore();
 </script>
 
 <template>
@@ -8,5 +11,5 @@ import TodoList from '~/components/TodoList.vue';
     <TodoCreator />
     <TodoList />
   </main>
-  <RouterView />
+  <RouterView v-if="todosStore.todos.length" />
 </template>
