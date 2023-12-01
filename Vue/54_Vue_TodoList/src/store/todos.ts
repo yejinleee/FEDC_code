@@ -11,16 +11,52 @@ export interface Todo {
   createdAt: string; // 할 일 생성일
   updatedAt: string; // 할 일 수정일
 }
-
+type FilterStatus = 'all' | 'todo' | 'done';
+type Filters = Filter[];
+interface Filter {
+  label: string;
+  name: FilterStatus;
+}
 interface CreateTodoPayload {
   title: string;
 }
 
+const filters: Filters = [
+  {
+    label: '전체',
+    name: 'all',
+  },
+  {
+    label: '할 일만',
+    name: 'todo',
+  },
+  {
+    label: '완료만',
+    name: 'done',
+  },
+];
 export const useTodosStore = defineStore('todos', {
   state: () => ({
     todos: [] as Todos,
+    filterStatus: 'all' as FilterStatus,
+    filters,
   }),
-  getters: {},
+  getters: {
+    filteredTodos(state) {
+      //매개변수로 state 제공
+      return state.todos.filter((todo) => {
+        switch (state.filterStatus) {
+          case 'todo':
+            return !todo.done; //done이 false가 아닌, 즉 true인 애들로 filter한다는 뜻
+          case 'done':
+            return todo.done;
+          case 'all':
+          default:
+            return true;
+        }
+      });
+    },
+  },
   actions: {
     async fetchTodos() {
       const { data } = await axios.post('/api/todos', {});
@@ -69,6 +105,26 @@ export const useTodosStore = defineStore('todos', {
           done,
         });
       });
+    },
+    async deleteDoneTodos() {
+      //일괄 삭제
+      const todoIds = this.todos
+        .filter((todo) => todo.done)
+        .map((todo) => todo.id);
+      if (!todoIds.length) return;
+      try {
+        await axios.post('/api/todos', {
+          method: 'DELETE',
+          path: 'deletions',
+          data: {
+            todoIds,
+          },
+        });
+        // 로컬데이터 갱신
+        this.todos = this.todos.filter((todo) => !todoIds.includes(todo.id)); //삭제 안할! 애들로 배열 갱신인까 !붙임
+      } catch (err) {
+        console.error('deleteDoneTodos', err);
+      }
     },
   },
 });
