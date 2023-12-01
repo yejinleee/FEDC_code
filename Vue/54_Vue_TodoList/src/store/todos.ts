@@ -17,8 +17,13 @@ interface Filter {
   label: string;
   name: FilterStatus;
 }
+
 interface CreateTodoPayload {
   title: string;
+}
+interface ReorderTodosPayload {
+  oldIndex: number;
+  newIndex: number;
 }
 
 const filters: Filters = [
@@ -125,6 +130,19 @@ export const useTodosStore = defineStore('todos', {
       } catch (err) {
         console.error('deleteDoneTodos', err);
       }
+    },
+    reorderTodos({ oldIndex, newIndex }: ReorderTodosPayload) {
+      if (oldIndex === newIndex) return; // 결국제자리니까 그냥 종료시킴
+      const movedTodo = this.todos.splice(oldIndex, 1)[0]; // splice로 제거하고 , 제거한 요소들을 배열로 리턴하니까 그중 [0]이 움직인 그 투두
+      this.todos.splice(newIndex, 0, movedTodo); // newIndex위치에 그걸 넣음
+      const todoIds = this.todos.map((todo) => todo.id);
+      axios.post('/api/todos', {
+        method: 'PUT',
+        path: 'reorder',
+        data: {
+          todoIds,
+        },
+      });
     },
   },
 });
