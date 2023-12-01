@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import dayjs from 'dayjs';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useTodosStore } from '~/store/todos';
 import TheIcon from '~/components/TheIcon.vue';
@@ -9,13 +10,49 @@ const todosStore = useTodosStore();
 const route = useRoute();
 const router = useRouter();
 
+const editorEl = ref<HTMLDivElement | null>(null);
+
 const foundTodo = todosStore.todos.find((todo) => todo.id === route.params.id);
 foundTodo ? (todosStore.currentTodo = { ...foundTodo }) : router.push('/');
 
-function toggleDone() {}
-function offModal() {}
-function deleteTodo() {}
-function updateTodo() {}
+onMounted(() => {
+  editorEl.value?.focus(); // 선택적속성 `?` 붙임. null이 아닐때만 실행하도록함(일종의 타입가드)
+  window.addEventListener('keydown', escKeyHandler);
+});
+onUnmounted(() => {
+  // 현재 컴포넌트가 연결 해제시, 이벤트리스너도 제거
+  window.removeEventListener('keydown', escKeyHandler);
+});
+
+function escKeyHandler(event: KeyboardEvent) {
+  if (event.key === 'Escape') {
+    offModal();
+  }
+}
+function toggleDone() {
+  todosStore.currentTodo.done = !todosStore.currentTodo.done;
+}
+function onChange() {
+  const title = editorEl.value?.textContent;
+  if (title && title.trim()) {
+    todosStore.currentTodo.title = title;
+  }
+}
+function offModal() {
+  router.push('/');
+}
+async function deleteTodo() {
+  await todosStore.deleteTodo({
+    id: todosStore.currentTodo.id,
+  });
+  offModal();
+}
+async function updateTodo() {
+  await todosStore.updateTodo({
+    ...todosStore.currentTodo,
+  });
+  offModal();
+}
 
 function formatDate(date: string) {
   return dayjs(date).format('YYYY년 M월 D일 H시 m분');
@@ -24,7 +61,9 @@ function formatDate(date: string) {
 
 <template>
   <div class="modal">
-    <div class="background"></div>
+    <div
+      class="background"
+      @click="offModal"></div>
     <div class="contents">
       <div class="todo-head">
         <TheIcon
@@ -42,15 +81,22 @@ function formatDate(date: string) {
         <div class="date">
           생성일: {{ formatDate(todosStore.currentTodo.createdAt) }}
         </div>
-        <div class="date">
+        <div
+          class="date"
+          v-if="
+            todosStore.currentTodo.createdAt !==
+            todosStore.currentTodo.updatedAt
+          ">
           수정일: {{ formatDate(todosStore.currentTodo.updatedAt) }}
         </div>
       </div>
       <div
+        ref="editorEl"
         class="editor"
-        contenteditable>
-        heloo
-      </div>
+        contenteditable
+        @blur="onChange"
+        @keydown.enter.prevent="onChange(), updateTodo()"
+        v-text="todosStore.currentTodo.title"></div>
     </div>
   </div>
 </template>
@@ -81,6 +127,7 @@ function formatDate(date: string) {
     overflow: auto;
     border-radius: 6px;
     background-color: white;
+    margin: 0 20px;
     .date-group {
       padding: 30px 30px 0 30px;
       .date {

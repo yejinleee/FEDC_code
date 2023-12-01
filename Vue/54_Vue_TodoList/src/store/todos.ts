@@ -21,6 +21,9 @@ interface Filter {
 interface CreateTodoPayload {
   title: string;
 }
+interface DeleteTodoPayload {
+  id: string;
+}
 interface ReorderTodosPayload {
   oldIndex: number;
   newIndex: number;
@@ -106,6 +109,7 @@ export const useTodosStore = defineStore('todos', {
             done,
           },
         });
+        foundTodo.updatedAt = updatedTodo.updatedAt; // 객체 전체를 덮어쓰진 않는이유? : 위에서 이미 Object.assign로 덮어씀(이땐 로컬정보로 덮어씀). 혹시 이 사이에 다른 수정이 생길수도 있으니!
       } catch (err) {
         console.error('updateTodo', err);
         // 서버에서 갱신이 실패했을 경우 로컬도 돌려야 하기 때문에 Try-catch
@@ -120,6 +124,17 @@ export const useTodosStore = defineStore('todos', {
           done,
         });
       });
+    },
+    async deleteTodo({ id }: DeleteTodoPayload) {
+      try {
+        await axios.post('/api/todos', {
+          method: 'DELETE',
+          path: id,
+        });
+        this.todos = this.todos.filter((todo) => todo.id !== id);
+      } catch (err) {
+        console.error('deleteTodo', err);
+      }
     },
     async deleteDoneTodos() {
       //일괄 삭제
