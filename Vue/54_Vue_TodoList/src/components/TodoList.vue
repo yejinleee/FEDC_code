@@ -99,23 +99,4 @@ function initSortable() {
   border-radius: 6px;
   overflow: hidden;
 }
-.todo-head {
-  height: 60px;
-  border-bottom: 1px solid var(--border-color);
-  background-color: rgba(#fff, 0.9);
-  position: relative;
-  :deep(.the-icon) {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 24px;
-    margin: auto;
-  }
-  .btn-group {
-    height: 100%;
-    display: flex;
-    position: absolute;
-    right: 0;
-  }
-}
 </style>

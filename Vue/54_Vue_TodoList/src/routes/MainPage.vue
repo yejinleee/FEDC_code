@@ -8,4 +8,5 @@ import TodoList from '~/components/TodoList.vue';
     <TodoCreator />
     <TodoList />
   </main>
+  <RouterView />
 </template>
