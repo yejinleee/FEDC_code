@@ -1,8 +1,11 @@
 <script setup lang="ts">
+import TheLoader from '~/components/TheLoader.vue';
+
 defineProps<{
   active?: boolean;
   success?: boolean;
   danger?: boolean;
+  loading?: boolean;
 }>();
 </script>
 
@@ -14,7 +17,8 @@ defineProps<{
       'btn-danger': danger,
     }"
     class="btn">
-    <slot></slot>
+    <TheLoader v-if="loading" />
+    <slot v-else></slot>
   </button>
 </template>
 

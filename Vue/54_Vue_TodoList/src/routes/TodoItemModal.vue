@@ -11,6 +11,8 @@ const route = useRoute();
 const router = useRouter();
 
 const editorEl = ref<HTMLDivElement | null>(null);
+const updatedLoading = ref(false);
+const deleteLoading = ref(false);
 
 const foundTodo = todosStore.todos.find((todo) => todo.id === route.params.id);
 foundTodo ? (todosStore.currentTodo = { ...foundTodo }) : router.push('/');
@@ -42,16 +44,33 @@ function offModal() {
   router.push('/');
 }
 async function deleteTodo() {
-  await todosStore.deleteTodo({
-    id: todosStore.currentTodo.id,
-  });
-  offModal();
+  if (deleteLoading.value) return;
+  if (updatedLoading.value) return;
+  deleteLoading.value = true;
+  try {
+    await todosStore.deleteTodo({
+      id: todosStore.currentTodo.id,
+    });
+    offModal();
+  } catch (err) {
+    console.error('TodoItemModal/deleteTodo', err);
+  } finally {
+    deleteLoading.value = false;
+  }
 }
 async function updateTodo() {
-  await todosStore.updateTodo({
-    ...todosStore.currentTodo,
-  });
-  offModal();
+  if (updatedLoading.value) return;
+  updatedLoading.value = true;
+  try {
+    await todosStore.updateTodo({
+      ...todosStore.currentTodo,
+    });
+    offModal();
+  } catch (err) {
+    console.error('TodoItemModal/updateTodo', err);
+  } finally {
+    updatedLoading.value = false;
+  }
 }
 
 function formatDate(date: string) {
@@ -73,8 +92,18 @@ function formatDate(date: string) {
         </TheIcon>
         <div class="btn-group">
           <TheBtn @click="offModal">취소</TheBtn>
-          <TheBtn @click="deleteTodo">삭제</TheBtn>
-          <TheBtn @click="updateTodo">저장</TheBtn>
+          <TheBtn
+            danger
+            @click="deleteTodo"
+            :loading="deleteLoading"
+            >삭제</TheBtn
+          >
+          <TheBtn
+            success
+            @click="updateTodo"
+            :loading="updatedLoading"
+            >저장</TheBtn
+          >
         </div>
       </div>
       <div class="date-group">

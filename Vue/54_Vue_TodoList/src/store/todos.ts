@@ -58,6 +58,7 @@ export const useTodosStore = defineStore('todos', {
     filterStatus: 'all' as FilterStatus,
     filters,
     currentTodo,
+    loading: false,
   }),
   getters: {
     filteredTodos(state) {
@@ -77,10 +78,20 @@ export const useTodosStore = defineStore('todos', {
   },
   actions: {
     async fetchTodos() {
-      const { data } = await axios.post('/api/todos', {});
-      this.todos = data;
+      if (this.loading) return;
+      this.loading = true;
+      try {
+        const { data } = await axios.post('/api/todos', {});
+        this.todos = data;
+      } catch (err) {
+        console.error('fetchTodos', err);
+      } finally {
+        this.loading = false;
+      }
     },
     async createTodo({ title }: CreateTodoPayload) {
+      if (this.loading) return;
+      this.loading = true;
       try {
         const { data: createdTodo } = await axios.post('/api/todos', {
           method: 'POST',
@@ -91,6 +102,8 @@ export const useTodosStore = defineStore('todos', {
         this.todos.unshift(createdTodo); // 맨앞으로 넣음
       } catch (err) {
         console.error('createTodo', err);
+      } finally {
+        this.loading = false;
       }
     },
     async updateTodo(todo: Todo) {
@@ -142,6 +155,9 @@ export const useTodosStore = defineStore('todos', {
         .filter((todo) => todo.done)
         .map((todo) => todo.id);
       if (!todoIds.length) return;
+
+      if (this.loading) return;
+      this.loading = true;
       try {
         await axios.post('/api/todos', {
           method: 'DELETE',
@@ -154,20 +170,31 @@ export const useTodosStore = defineStore('todos', {
         this.todos = this.todos.filter((todo) => !todoIds.includes(todo.id)); //삭제 안할! 애들로 배열 갱신인까 !붙임
       } catch (err) {
         console.error('deleteDoneTodos', err);
+      } finally {
+        this.loading = false;
       }
     },
-    reorderTodos({ oldIndex, newIndex }: ReorderTodosPayload) {
+    async reorderTodos({ oldIndex, newIndex }: ReorderTodosPayload) {
       if (oldIndex === newIndex) return; // 결국제자리니까 그냥 종료시킴
+
+      this.loading = true;
+
       const movedTodo = this.todos.splice(oldIndex, 1)[0]; // splice로 제거하고 , 제거한 요소들을 배열로 리턴하니까 그중 [0]이 움직인 그 투두
       this.todos.splice(newIndex, 0, movedTodo); // newIndex위치에 그걸 넣음
       const todoIds = this.todos.map((todo) => todo.id);
-      axios.post('/api/todos', {
-        method: 'PUT',
-        path: 'reorder',
-        data: {
-          todoIds,
-        },
-      });
+      try {
+        await axios.post('/api/todos', {
+          method: 'PUT',
+          path: 'reorder',
+          data: {
+            todoIds,
+          },
+        });
+      } catch (err) {
+        console.error('reorderTodos', err);
+      } finally {
+        this.loading = false;
+      }
     },
   },
 });
