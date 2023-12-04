@@ -1,24 +1,31 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Counter from "./components/Counter";
 
 function App() {
-  const [total, setTotal] = useState(0);
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    console.log("clicked");
+  }, [count]); // count 변화 감지
+
+  useEffect(() => {
+    console.log("component loaded");
+  }, []); //컴포넌트 로드 감지 (라이프사이클))
+
+  useEffect(() => {
+    console.log("event");
+    const handleScroll = () => {
+      console.log(window.scrollY);
+    };
+    document.addEventListener("scroll", handleScroll);
+    return () => document.removeEventListener("scroll", handleScroll);
+  }, []); //전역적인 이벤트 사용 , 컴포넌트 제거시 return 실행
+
   return (
     <div>
-      TotalCount : {total}
-      <Counter
-        onIncrease={(count) => setTotal(total + 1)}
-        onDecrease={(count) => setTotal(total - 1)}
-      />
-      <Counter
-        onIncrease={(count) => setTotal(total + 1)}
-        onDecrease={(count) => setTotal(total - 1)}
-      />
-      <Counter
-        onIncrease={(count) => setTotal(total + 1)}
-        onDecrease={(count) => setTotal(total - 1)}
-      />
+      <div> count : {count}</div>
+      <button onClick={() => setCount(count + 1)}>+</button>
     </div>
   );
 }
