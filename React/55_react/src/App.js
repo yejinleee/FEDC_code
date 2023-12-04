@@ -1,21 +1,24 @@
 import "./App.css";
 import { useState } from "react";
-import Board from "./components/Board";
+import Counter from "./components/Counter";
 
 function App() {
-  const [visible, setVisible] = useState(false);
-
-  const articles = [
-    { id: 1, title: "제목1", author: "y" },
-    { id: 2, title: "제목2", author: "j" },
-    { id: 3, title: "제목3", author: "l" },
-  ];
+  const [total, setTotal] = useState(0);
   return (
     <div>
-      <button onClick={() => setVisible(!visible)}>Toggle</button>
-
-      {visible && <Board articles={articles} />}
-      {visible ? <Board articles={articles} /> : <h2>false</h2>}
+      TotalCount : {total}
+      <Counter
+        onIncrease={(count) => setTotal(total + 1)}
+        onDecrease={(count) => setTotal(total - 1)}
+      />
+      <Counter
+        onIncrease={(count) => setTotal(total + 1)}
+        onDecrease={(count) => setTotal(total - 1)}
+      />
+      <Counter
+        onIncrease={(count) => setTotal(total + 1)}
+        onDecrease={(count) => setTotal(total - 1)}
+      />
     </div>
   );
 }
