@@ -1,5 +1,6 @@
 import useForm from "../hooks/useForm";
 import Button from "./Button";
+import ErrorText from "./ErroText";
 import Input from "./Input";
 import styled from "@emotion/styled";
 
@@ -22,15 +23,12 @@ const LoginForm = ({ onSubmit2 }) => {
       setTimeout(() => resolve(), 1000);
     });
   };
-  const { values, errors, isLoading, handleChange, handleSubmit } = useForm({
+  const { errors, isLoading, handleChange, handleSubmit } = useForm({
     initialValues: {
       name: "",
       password: "",
     },
-    onSubmit: async () => {
-      await sleep();
-      console.log("submit~");
-    },
+    onSubmit: onSubmit2,
     validate: ({ name, password }) => {
       const newErrors = {};
       if (!name) newErrors.name = "이름을 입력해주세요";
@@ -38,8 +36,6 @@ const LoginForm = ({ onSubmit2 }) => {
       return newErrors;
     },
   });
-
-  console.log(values, errors);
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -55,6 +51,7 @@ const LoginForm = ({ onSubmit2 }) => {
         placeholder="name"
         onChange={handleChange}
       />
+      {errors.name && <ErrorText>{errors.name}</ErrorText>}
       <Input
         type="password"
         name="password"
@@ -64,6 +61,8 @@ const LoginForm = ({ onSubmit2 }) => {
         }}
         onChange={handleChange}
       />
+      {errors.password && <ErrorText>{errors.password}</ErrorText>}
+
       <Button
         type="submit"
         disabled={isLoading}
