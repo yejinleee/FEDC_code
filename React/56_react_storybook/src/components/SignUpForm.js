@@ -5,34 +5,27 @@ import Input from "./Input";
 import CardForm from "./CardForm";
 import Title from "./Title";
 
-const LoginForm = ({ onSubmit2 }) => {
-  const sleep = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(), 1000);
-    });
-  };
+const SignUpForm = ({ onSubmit2 }) => {
   const { errors, isLoading, handleChange, handleSubmit } = useForm({
     initialValues: {
       name: "",
       password: "",
+      passwordConfirm: "",
     },
     onSubmit: onSubmit2,
-    validate: ({ name, password }) => {
+    validate: ({ name, password, passwordConfirm }) => {
       const newErrors = {};
       if (!name) newErrors.name = "이름을 입력해주세요";
       if (!password) newErrors.password = "비밀번호를 입력해주세요";
+      if (password !== passwordConfirm)
+        newErrors.passwordConfirm = "비밀번호가 일치하지 않습니다";
       return newErrors;
     },
   });
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // console.log("SUBMIIT");
-  //   onSubmit2 && onSubmit2();
-  // };
   return (
     <CardForm onSubmit={handleSubmit}>
-      <Title>Login</Title>
+      <Title>SignUp</Title>
       <Input
         type="text"
         name="name"
@@ -50,7 +43,18 @@ const LoginForm = ({ onSubmit2 }) => {
         onChange={handleChange}
       />
       {errors.password && <ErrorText>{errors.password}</ErrorText>}
-
+      <Input
+        type="password"
+        name="passwordConfirm"
+        placeholder="password Confirm"
+        style={{
+          marginTop: "10px",
+        }}
+        onChange={handleChange}
+      />
+      {errors.passwordConfirm && (
+        <ErrorText>{errors.passwordConfirm}</ErrorText>
+      )}
       <Button
         type="submit"
         disabled={isLoading}
@@ -58,10 +62,10 @@ const LoginForm = ({ onSubmit2 }) => {
           marginTop: "15px",
         }}
       >
-        Login
+        Signup
       </Button>
     </CardForm>
   );
 };
 
-export default LoginForm;
+export default SignUpForm;
