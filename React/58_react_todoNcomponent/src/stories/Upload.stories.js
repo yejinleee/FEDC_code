@@ -21,3 +21,21 @@ export const AccessFile = () => {
     </Upload>
   );
 };
+export const Droppable = () => {
+  return (
+    <Upload droppable>
+      {(file, dragging) => (
+        <div
+          style={{
+            width: 200,
+            height: 300,
+            border: "4px dashed",
+            borderColor: dragging ? "black" : "red",
+          }}
+        >
+          {file ? file.name : "Click or drag file to this area to upload"}
+        </div>
+      )}
+    </Upload>
+  );
+};
