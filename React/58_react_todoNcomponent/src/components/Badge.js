@@ -19,12 +19,20 @@ const Super = styled.sup`
   color: white;
   background-color: #f44;
   transform: translate(50%, -50%);
+
+  &.dot {
+    padding: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
 `;
 const Badge = ({
   children,
   count,
   maxCount,
   showZero,
+  dot = false, //숫자 대신 그냥 알림 유무만
   backgroundColor,
   textColor,
   ...props
@@ -33,14 +41,30 @@ const Badge = ({
     backgroundColor,
     color: textColor,
   };
+
+  let badge = null;
+  if (count) {
+    badge = (
+      <Super style={colorStyle}>
+        {maxCount && count > maxCount ? `${maxCount}+` : count}
+      </Super>
+    );
+  } else {
+    if (count !== undefined) {
+      badge = showZero ? <Super style={colorStyle}>0</Super> : null;
+    } else if (dot) {
+      badge = <Super className="dot" style={colorStyle} />;
+    }
+  }
   return (
     <BadgeContainer {...props}>
       {children}
-      {(count > 0 || (count === 0 && showZero)) && (
+      {/* {(count > 0 || (count === 0 && showZero)) && (
         <Super style={colorStyle}>
           {maxCount && count > maxCount ? `${maxCount}+` : count}
         </Super>
-      )}
+      )} */}
+      {badge}
     </BadgeContainer>
   );
 };
