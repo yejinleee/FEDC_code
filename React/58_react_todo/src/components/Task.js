@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import Toggle from "./Toggle";
+import { useTasks } from "../contexts/TaskProvider";
 const ListItem = styled.li`
   display: flex;
   width: 400px;
@@ -16,6 +17,7 @@ const Content = styled.span`
   flex: 1;
   margin-left: 8px;
   font-size: 14px;
+  text-decoration: ${({ complete }) => (complete ? "line-through" : "none")};
 `;
 const RemoveButton = styled.button`
   height: 24px;
@@ -26,13 +28,15 @@ const RemoveButton = styled.button`
   background-color: red;
   cursor: pointer;
 `;
-const Task = ({ content, complete, ...props }) => {
+const Task = ({ id, content, complete, ...props }) => {
+  const { updateTask, removeTask } = useTasks();
+
   return (
     <ListItem {...props}>
-      <Toggle on={complete} />
+      <Toggle on={complete} onChange={(e) => updateTask(id, e.target.value)} />
 
-      <Content>{content} </Content>
-      <RemoveButton>REMOVE</RemoveButton>
+      <Content complete={complete}>{content} </Content>
+      <RemoveButton onClick={() => removeTask(id)}>REMOVE</RemoveButton>
     </ListItem>
   );
 };
