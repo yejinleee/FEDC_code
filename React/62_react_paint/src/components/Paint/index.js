@@ -24,7 +24,7 @@ const Paint = ({
   const [currentCommand, setCurrentCommand] = useState(command);
   const [currentLineWidth, setCurrentLineWidth] = useState(lineWidth);
   const [currentPlugins, setCurrentPlugins] = useState({});
-  const [drawing, setDrawing] = useState(0);
+  const [drawing, setDrawing] = useState(false);
 
   const canvasRef = useRef();
 
@@ -41,13 +41,15 @@ const Paint = ({
   };
 
   useEffect(() => {
-    if (!canvasRef.current) return;
-
-    canvasRef.current.width = width * scale;
-    canvasRef.current.height = height * scale;
-
-    canvasRef.current.getContext("2d").scale(scale, scale);
-
+    setCurrentLineWidth(lineWidth);
+  }, [lineWidth]);
+  useEffect(() => {
+    setCurrentCommand(command);
+  }, [command]);
+  useEffect(() => {
+    setCurrentColor(color);
+  }, [color]);
+  useEffect(() => {
     plugins.forEach((plugin) => {
       plugin.canvas = canvasRef.current; ///////////////
     });
@@ -60,6 +62,15 @@ const Paint = ({
         }))
       )
     );
+  }, [canvasRef.current, plugins]);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+
+    canvasRef.current.width = width * scale;
+    canvasRef.current.height = height * scale;
+
+    canvasRef.current.getContext("2d").scale(scale, scale);
   }, [canvasRef.current, scale]);
 
   // 그리기 이벤트 구현
