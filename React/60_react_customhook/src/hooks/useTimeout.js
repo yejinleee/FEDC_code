@@ -9,6 +9,7 @@ const useTimeout = (fn, ms) => {
     run();
     return clear;
   }, [run, clear]);
+
   return clear;
 };
 

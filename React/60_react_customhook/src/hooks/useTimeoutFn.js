@@ -2,6 +2,7 @@
 import { useRef, useCallback, useEffect } from "react";
 
 const useTimeoutFn = (fn, ms) => {
+  /// ms초 후에 실행할 함수 fn을 받고, 타임아웃을 걸 실행함수run과 타임아웃을 멈출 clear함수를 만들어 리턴.
   const timeoutId = useRef();
   const callback = useRef(fn);
 
@@ -11,17 +12,16 @@ const useTimeoutFn = (fn, ms) => {
 
   const run = useCallback(() => {
     timeoutId.current && clearTimeout(timeoutId.current);
-
     timeoutId.current = setTimeout(() => {
       callback.current();
     }, ms);
-  }, [ms]); // 왜 dependencies ms 하나뿐? timeoutId는..? 이거기준이뭐고,,
+  }, [ms]);
 
   const clear = useCallback(() => {
     timeoutId.current && clearTimeout(timeoutId.current);
   }, []);
 
-  useEffect(() => clear, [clear]); // 꼭 !!
+  useEffect(() => clear, [clear]); // 훅이 사라질때 clear 꼭!
   return [run, clear];
 };
 

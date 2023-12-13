@@ -27,8 +27,8 @@ export const Default = () => {
     <div>
       <div>useAsyncFn 테스트</div>
       <div>{JSON.stringify(state)}</div>
+      {/* // state엔 'success! 혹은 ERROR! 가 나오게 됨 */}
       <button onClick={callback} disabled={state.isLoading}>
-        {" "}
         비동기 호출
       </button>
     </div>
