@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { usePostContext } from "../../contexts/PostProvider";
 import { Header, Text } from "../index";
+import { Link } from "react-router-dom";
 
 const PostItem = ({ post }) => {
   const [loading, setLoading] = useState(false);
@@ -20,7 +21,8 @@ const PostItem = ({ post }) => {
       <Header strong level={2}>
         {post.title}
       </Header>
-      <Text>{post.body}</Text>
+      <Link to={`/posts/${post.id}`}>..Detail</Link>
+      {/* <Text>{post.body}</Text> */}
       {loading ? (
         <span>((삭제중...))</span>
       ) : (
