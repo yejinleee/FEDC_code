@@ -1,7 +1,9 @@
 import styled from "@emotion/styled";
 import Task from "./Task";
-import { useTasks } from "../contexts/TaskProvider";
+// import { useTasks } from "../contexts/TaskProvider";
 import { ITask } from "../utils/types/taskType";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux";
 
 const UnorderList = styled.ul`
   width: 400px;
@@ -16,8 +18,9 @@ const UnorderList = styled.ul`
 `;
 
 const TaskList = (props: any) => {
-  const { tasks } = useTasks();
-  console.log(tasks);
+  // const { tasks } = useTasks();
+  const tasks = useSelector((store: RootState) => store.tasks); // store가 unknown으로 추론되서 이에 타입을 줘야함
+
   return (
     <UnorderList {...props}>
       {tasks.map((item: ITask) => (

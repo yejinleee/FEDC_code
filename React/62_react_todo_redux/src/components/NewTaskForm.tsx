@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import { ChangeEvent, FormEventHandler, useState } from "react";
-import { useTasks } from "../contexts/TaskProvider";
+import { useDispatch } from "react-redux";
+import { addTask } from "../redux/tasks";
+// import { useTasks } from "../contexts/TaskProvider";
 
 const Form = styled.form`
   width: 400px;
@@ -26,11 +28,14 @@ const SubmitButton = styled.button`
 `;
 const NewTaskForm = (props: any) => {
   const [task, setTask] = useState("");
-  const { addTask } = useTasks();
+  // const { addTask } = useTasks();
+  const dispatch = useDispatch(); //react-redux에서 제공하는 훅임
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    addTask(task);
+    // addTask(task);
+    dispatch(addTask(task));
+
     setTask("");
   };
   return (
