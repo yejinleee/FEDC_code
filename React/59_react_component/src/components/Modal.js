@@ -4,7 +4,7 @@ import ReactDOM from "react-dom";
 import useClickAway from "../hooks/useClickAway";
 
 const BackgroundDim = styled.div`
-  position: fixd;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
